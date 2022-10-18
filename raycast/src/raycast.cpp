@@ -4,18 +4,32 @@
 
 #include <dmsdk/sdk.h>
 
-//dmVMath::Vector3 *vPlayer;
+// dmVMath::Vector3 *vPlayer;
 dmVMath::Vector3 *vMouse;
 dmVMath::Vector3 vMouseCell(0, 0, 0);
 dmVMath::Vector3 *vRayStart;
+dmVMath::Vector3 vRayUnitStepSize(0, 0, 0);
 
 dmVMath::Vector3 vMapSize(10, 10, 0);
 dmVMath::Vector3 vCellSize(32, 32, 0);
+dmVMath::Vector3 vMapCheck(0, 0, 0);
+dmVMath::Vector3 vRayLength1D(0, 0, 0);
+dmVMath::Vector3 vStep(0, 0, 0);
+ dmVMath::Vector3 vIntersection(0, 0, 0);
+
+bool bTileFound = false;
+float fMaxDistance = 0.0f;
+float fDistance = 0.0f;
 
 int tile_width = 0;
 int tile_height = 0;
 int tilemap_width = 0;
 int tilemap_height = 0;
+int tile = 0;
+int tile_x = 0;
+int tile_y = 0;
+int side = 0;
+int luaPosition = 1;
 
 dmArray<int> vecMap;
 dmArray<int> target_tiles;
@@ -106,19 +120,20 @@ static int cast(lua_State *L)
     vMouse = dmScript::CheckVector3(L, 2);
 
     vMouseCell.setX(vMouse->getX() / (vCellSize.getX() / 2));
-    vMouseCell.setY( vMouse->getY() / (vCellSize.getY() / 2));
-
+    vMouseCell.setY(vMouse->getY() / (vCellSize.getY() / 2));
 
     dmVMath::Vector3 vRayDir(normalize(*vMouse - *vRayStart));
 
-    dmVMath::Vector3 vRayUnitStepSize(
-        abs(1.0f / vRayDir.getX()),
-        abs(1.0f / vRayDir.getY()),
-        0);
+    vRayUnitStepSize.setX(abs(1.0f / vRayDir.getX()));
+    vRayUnitStepSize.setY(abs(1.0f / vRayDir.getY()));
 
-    dmVMath::Vector3 vMapCheck(vRayStart->getX(), vRayStart->getY(), 0);
-    dmVMath::Vector3 vRayLength1D(0, 0, 0);
-    dmVMath::Vector3 vStep(0, 0, 0);
+    vMapCheck = *vRayStart;
+
+    vRayLength1D.setX(0);
+    vRayLength1D.setY(0);
+
+    vStep.setX(0);
+    vStep.setY(0);
 
     // Starting Conditions
     if (vRayDir.getX() < 0)
@@ -143,14 +158,14 @@ static int cast(lua_State *L)
         vRayLength1D.setY(((vMapCheck.getY() + 1) - vRayStart->getY()) * vRayUnitStepSize.getY());
     }
 
-    bool bTileFound = false;
-    float fMaxDistance = distance(vRayStart, vMouse); // 1000.0f;
-
-    float fDistance = 0.0f;
-    int tile = 0;
-    int tile_x = 0;
-    int tile_y = 0;
-    int side;
+    //Reset values
+    bTileFound = false;
+    fMaxDistance = distance(vRayStart, vMouse); // 1000.0f;
+    fDistance = 0.0f;
+    tile = 0;
+    tile_x = 0;
+    tile_y = 0;
+    side = 0;
 
     while (!bTileFound && fDistance < fMaxDistance)
     {
@@ -172,36 +187,31 @@ static int cast(lua_State *L)
         // Test tile
         if (vMapCheck.getX() >= 0 && vMapCheck.getX() < (vMapSize.getX() * vCellSize.getX()) && vMapCheck.getY() >= 0 && vMapCheck.getY() < (vMapSize.getY() * vCellSize.getY()))
         {
-
             tile_x = (int)(vMapCheck.getX() / vCellSize.getX());
             tile_y = (int)(vMapCheck.getY() / vCellSize.getY());
             tile = (tilemap_height * tilemap_width) - ((tilemap_height * tile_y) + (tilemap_width - tile_x));
 
             if (vecMap[tile] == 1)
             {
-                dmLogInfo("TYPE %i", vecMap[tile]);
-                dmLogInfo("Tile ID %i", tile);
-                dmLogInfo("SIDE %i", side);
+                //! Implement a target tile check
                 bTileFound = true;
             }
         }
     }
 
     // Calculate intersection location
-    dmVMath::Vector3 vIntersection;
     if (bTileFound)
     {
         vIntersection = *vRayStart + vRayDir * fDistance;
-        dmLogInfo("vIntersection: %f - %f", vIntersection.getX(), vIntersection.getY());
     }
 
-    int iL = 1;
+     luaPosition = 1; // +1 is for hit
 
     lua_pushboolean(L, bTileFound);
 
     if (bTileFound)
     {
-        iL += 6;
+        luaPosition += 6; // +6 if hit
         lua_pushinteger(L, tile_x + 1); // +1 for lua table
         lua_pushinteger(L, tile_y + 1); // +1 for lua table
         lua_pushinteger(L, tile + 1);   // +1 for lua table
@@ -210,7 +220,7 @@ static int cast(lua_State *L)
         lua_pushinteger(L, side);
     }
 
-    return iL;
+    return luaPosition;
 }
 
 // Functions exposed to Lua

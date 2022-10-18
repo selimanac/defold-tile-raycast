@@ -8,3 +8,6 @@ Thumbs.db
 .project
 .cproject
 builtins
+/.vscode
+.vscode
+*.der
