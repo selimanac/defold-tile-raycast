@@ -5,34 +5,35 @@
 #include <dmsdk/sdk.h>
 
 // dmVMath::Vector3 *vPlayer;
-dmVMath::Vector3 *vMouse;
-dmVMath::Vector3 vMouseCell(0, 0, 0);
+dmVMath::Vector3 *vRayEnd;
+dmVMath::Vector3 vRayEndTile(0, 0, 0);
 dmVMath::Vector3 *vRayStart;
 dmVMath::Vector3 vRayUnitStepSize(0, 0, 0);
 
-dmVMath::Vector3 vMapSize(10, 10, 0);
-dmVMath::Vector3 vCellSize(32, 32, 0);
+dmVMath::Vector3 vTilemapSize(10, 10, 0);
+dmVMath::Vector3 vTileSize(32, 32, 0);
 dmVMath::Vector3 vMapCheck(0, 0, 0);
 dmVMath::Vector3 vRayLength1D(0, 0, 0);
 dmVMath::Vector3 vStep(0, 0, 0);
- dmVMath::Vector3 vIntersection(0, 0, 0);
+dmVMath::Vector3 vIntersection(0, 0, 0);
+dmVMath::Vector3 vRayDir(0, 0, 0);
 
 bool bTileFound = false;
 float fMaxDistance = 0.0f;
 float fDistance = 0.0f;
 
-int tile_width = 0;
-int tile_height = 0;
-int tilemap_width = 0;
-int tilemap_height = 0;
+int iTileWidth = 0;
+int iTileHeight = 0;
+int iTilemapWidth = 0;
+int iTilemapHeight = 0;
 int tile = 0;
 int tile_x = 0;
 int tile_y = 0;
 int side = 0;
 int luaPosition = 1;
 
-dmArray<int> vecMap;
-dmArray<int> target_tiles;
+dmArray<int> aTilemap;
+dmArray<int> aTargetTiles;
 
 static float distance(dmVMath::Vector3 *v1, dmVMath::Vector3 *v2)
 {
@@ -41,51 +42,49 @@ static float distance(dmVMath::Vector3 *v1, dmVMath::Vector3 *v2)
 
 static int reset(lua_State *L)
 {
-    vecMap.SetCapacity(0);
-    vecMap.SetSize(0);
+    aTilemap.SetSize(0);
+    aTargetTiles.SetSize(0);
     return 0;
 }
 
-//  raycast.init(tile_width, tile_height, tilemap_width, tilemap_height, tiles, target_tiles, debug_print)
 static int init(lua_State *L)
 {
-    tile_width = luaL_checkinteger(L, 1);  // tile_width
-    tile_height = luaL_checkinteger(L, 2); // tile_height
+    iTileWidth = luaL_checkinteger(L, 1);
+    iTileHeight = luaL_checkinteger(L, 2);
+    iTilemapWidth = luaL_checkinteger(L, 3);
+    iTilemapHeight = luaL_checkinteger(L, 4);
 
-    tilemap_width = luaL_checkinteger(L, 3);  // tilemap_width
-    tilemap_height = luaL_checkinteger(L, 4); // tilemap_height
+    vTilemapSize.setX(iTilemapWidth);
+    vTilemapSize.setY(iTilemapHeight);
 
-    vMapSize.setX(tilemap_width);
-    vMapSize.setY(tilemap_height);
+    vTileSize.setX(iTileWidth);
+    vTileSize.setY(iTileHeight);
 
-    vCellSize.setX(tile_width);
-    vCellSize.setY(tile_height);
+    aTilemap.SetCapacity((iTilemapWidth * iTilemapHeight));
 
-    vecMap.SetCapacity((tilemap_width * tilemap_height));
-
-    /* tilemap */
+    /* Tilemap */
     luaL_checktype(L, 5, LUA_TTABLE);
     lua_pushnil(L);
     while (lua_next(L, 5) != 0)
     {
         if (lua_isnumber(L, -1))
         {
-            vecMap.Push(lua_tointeger(L, -1));
+            aTilemap.Push(lua_tointeger(L, -1));
         }
         lua_pop(L, 1);
     }
 
-    /* target_tiles */
+    /* Target Tiles */
     luaL_checktype(L, 6, LUA_TTABLE);
     int tiles_count = lua_objlen(L, 6); // Keep this for lua 5.1 - For  5.2  =>   tiles_count = lua_rawlen(L, 6);
-    target_tiles.SetCapacity(tiles_count);
+    aTargetTiles.SetCapacity(tiles_count);
 
     lua_pushnil(L);
     while (lua_next(L, 6) != 0)
     {
         if (lua_isnumber(L, -1))
         {
-            target_tiles.Push(lua_tointeger(L, -1));
+            aTargetTiles.Push(lua_tointeger(L, -1));
         }
         lua_pop(L, 1);
     }
@@ -93,9 +92,9 @@ static int init(lua_State *L)
     // Optional print output
     if (lua_isboolean(L, 7) && lua_toboolean(L, 7) == true)
     {
-        for (int i = 0; i < vecMap.Size(); i++)
+        for (int i = 0; i < aTilemap.Size(); i++)
         {
-            printf("%i, ", vecMap[i]);
+            printf("%i, ", aTilemap[i]);
             if (i == 9 || i == 19 || i == 29 || i == 39 || i == 49 || i == 59 || i == 69 || i == 79 || i == 89)
             {
                 printf("\n---\n");
@@ -110,19 +109,19 @@ static int init(lua_State *L)
 static int cast(lua_State *L)
 {
     // Return if map or tiles not set.
-    if (vecMap.Size() == 0 || target_tiles.Size() == 0)
+    if (aTilemap.Size() == 0 || aTargetTiles.Size() == 0)
     {
         dmLogError("Tilemap or Target Tiles are not set.");
         return 0;
     }
 
     vRayStart = dmScript::CheckVector3(L, 1);
-    vMouse = dmScript::CheckVector3(L, 2);
+    vRayEnd = dmScript::CheckVector3(L, 2);
 
-    vMouseCell.setX(vMouse->getX() / (vCellSize.getX() / 2));
-    vMouseCell.setY(vMouse->getY() / (vCellSize.getY() / 2));
+    vRayEndTile.setX(vRayEnd->getX() / (vTileSize.getX() / 2));
+    vRayEndTile.setY(vRayEnd->getY() / (vTileSize.getY() / 2));
 
-    dmVMath::Vector3 vRayDir(normalize(*vMouse - *vRayStart));
+    vRayDir = normalize(*vRayEnd - *vRayStart);
 
     vRayUnitStepSize.setX(abs(1.0f / vRayDir.getX()));
     vRayUnitStepSize.setY(abs(1.0f / vRayDir.getY()));
@@ -158,9 +157,9 @@ static int cast(lua_State *L)
         vRayLength1D.setY(((vMapCheck.getY() + 1) - vRayStart->getY()) * vRayUnitStepSize.getY());
     }
 
-    //Reset values
+    // Reset values
     bTileFound = false;
-    fMaxDistance = distance(vRayStart, vMouse); // 1000.0f;
+    fMaxDistance = distance(vRayStart, vRayEnd);
     fDistance = 0.0f;
     tile = 0;
     tile_x = 0;
@@ -185,16 +184,19 @@ static int cast(lua_State *L)
         }
 
         // Test tile
-        if (vMapCheck.getX() >= 0 && vMapCheck.getX() < (vMapSize.getX() * vCellSize.getX()) && vMapCheck.getY() >= 0 && vMapCheck.getY() < (vMapSize.getY() * vCellSize.getY()))
+        if (vMapCheck.getX() >= 0 && vMapCheck.getX() < (vTilemapSize.getX() * vTileSize.getX()) && vMapCheck.getY() >= 0 && vMapCheck.getY() < (vTilemapSize.getY() * vTileSize.getY()))
         {
-            tile_x = (int)(vMapCheck.getX() / vCellSize.getX());
-            tile_y = (int)(vMapCheck.getY() / vCellSize.getY());
-            tile = (tilemap_height * tilemap_width) - ((tilemap_height * tile_y) + (tilemap_width - tile_x));
+            tile_x = (int)(vMapCheck.getX() / vTileSize.getX());
+            tile_y = (int)(vMapCheck.getY() / vTileSize.getY());
+            tile = (iTilemapHeight * iTilemapWidth) - ((iTilemapHeight * tile_y) + (iTilemapWidth - tile_x));
 
-            if (vecMap[tile] == 1)
+            for (int i = 0; i < aTargetTiles.Size(); i++)
             {
-                //! Implement a target tile check
-                bTileFound = true;
+                if (aTilemap[tile] == aTargetTiles[i])
+                {
+
+                    bTileFound = true;
+                }
             }
         }
     }
@@ -205,13 +207,13 @@ static int cast(lua_State *L)
         vIntersection = *vRayStart + vRayDir * fDistance;
     }
 
-     luaPosition = 1; // +1 is for hit
+    luaPosition = 1; // +1 is for hit
 
     lua_pushboolean(L, bTileFound);
 
     if (bTileFound)
     {
-        luaPosition += 6; // +6 if hit
+        luaPosition += 6;               // +6 if hit
         lua_pushinteger(L, tile_x + 1); // +1 for lua table
         lua_pushinteger(L, tile_y + 1); // +1 for lua table
         lua_pushinteger(L, tile + 1);   // +1 for lua table

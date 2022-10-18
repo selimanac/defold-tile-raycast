@@ -161,8 +161,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 112.0
-    y: -77.0
+    x: 297.0
+    y: -89.0
     z: 0.0
   }
   rotation {
@@ -183,7 +183,7 @@ embedded_instances {
   "  id: \"logo\"\n"
   "  type: \"sprite\"\n"
   "  data: \"tile_set: \\\"/example/main.atlas\\\"\\n"
-  "default_animation: \\\"logo\\\"\\n"
+  "default_animation: \\\"particle_blob\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
@@ -201,8 +201,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 273.0
-    y: 368.0
+    x: 150.0
+    y: -62.0
     z: 0.0
   }
   rotation {

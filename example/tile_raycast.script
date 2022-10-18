@@ -1,4 +1,5 @@
 local debugdraw = require "debug-draw.debug-draw"
+local camera = require "orthographic.camera"
 
 local tilemap_url
 local ray_start_url
@@ -7,9 +8,13 @@ local ray_from
 local ray_to = vmath.vector3(10, 10, 0)
 local intersec = vmath.vector3(10, 10, 0)
 
+local CAMERA_ID = hash("/camera")
+local target_world_position = vmath.vector3(0, 0, 0)
+
 local hit_result = false
 
 function init(self)
+    msg.post(".", "acquire_input_focus")
 
     tilemap_url = msg.url("main:/tilemap#example")
 
@@ -18,15 +23,15 @@ function init(self)
 
     -- LuaFormatter off
 	local tiles = {
-		2,2,2,2,2,2,2,2,2,2,
-		2,2,2,2,2,2,2,2,2,2,
-		2,2,2,2,2,2,2,2,2,2,
+		2,2,2,2,0,2,2,2,2,2,
+		2,2,2,2,0,2,2,2,2,2,
+		2,2,2,2,0,2,2,2,2,2,
 		2,2,1,2,2,2,2,2,2,2,
 		2,2,2,2,2,2,2,2,2,2,
 		1,2,1,2,2,2,1,1,1,1,
 		1,1,1,2,2,2,1,1,1,1,
-		1,1,1,2,1,2,1,1,1,1,
-		1,1,1,1,2,1,1,1,1,1,
+		1,1,1,2,1,2,1,3,1,1,
+		1,1,1,1,2,1,1,1,4,1,
 		1,1,1,2,2,2,2,1,1,1
 	}
 	-- LuaFormatter on
@@ -34,7 +39,7 @@ function init(self)
     -- TileMap Settings
     local tile_width = 32
     local tile_height = 32
-    local target_tiles = {2} -- Not implemented yet
+    local target_tiles = {2,3,4} -- Not implemented yet
     local tilemap_width = 10
     local tilemap_height = 10
 
@@ -98,27 +103,30 @@ function init(self)
 end
 
 function update(self, dt)
+
     if hit_result then
-        msg.post("@render:", "draw_line", {start_point = ray_from, end_point = ray_to, color = vmath.vector4(1, 0, 0, 1)})
+        msg.post("@render:", "draw_line", {start_point = ray_from, end_point = target_world_position, color = vmath.vector4(1, 0, 0, 1)})
+        msg.post("@render:", "draw_line", {start_point = ray_from, end_point = intersec, color = vmath.vector4(1, 1, 0, 1)})
+        debugdraw.circle(intersec.x, intersec.y, 15, debugdraw.COLORS.green)
+    end
+
+    local hit, tile_x, tile_y, tile_id, intersection_x, intersection_y, side = raycast.cast(ray_from, target_world_position)
+    if hit then
+        intersec.x = intersection_x
+        intersec.y = intersection_y
+        msg.post("@render:", "draw_line", {start_point = ray_from, end_point = target_world_position, color = vmath.vector4(1, 0, 0, 1)})
         msg.post("@render:", "draw_line", {start_point = ray_from, end_point = intersec, color = vmath.vector4(1, 1, 0, 1)})
         debugdraw.circle(intersec.x, intersec.y, 15, debugdraw.COLORS.green)
     end
 end
 
 function on_input(self, action_id, action)
-    -- Add input-handling code here. The game object this script is attached to
-    -- must have acquired input focus:
-    --
-    --    msg.post(".", "acquire_input_focus")
-    --
-    -- All mapped input bindings will be received. Mouse and touch input will
-    -- be received regardless of where on the screen it happened.
-    -- Learn more: https://defold.com/manuals/input/
-    -- Remove this function if not needed
+
+    ray_to.x = action.x
+    ray_to.y = action.y
+
+    target_world_position = camera.screen_to_world(CAMERA_ID, ray_to)
+
+    go.set_position(target_world_position, ray_end_url)
 end
 
-function on_reload(self)
-    -- Add reload-handling code here
-    -- Learn more: https://defold.com/manuals/hot-reload/
-    -- Remove this function if not needed
-end
