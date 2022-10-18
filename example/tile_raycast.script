@@ -1,0 +1,124 @@
+local debugdraw = require "debug-draw.debug-draw"
+
+local tilemap_url
+local ray_start_url
+local ray_end_url
+local ray_from
+local ray_to = vmath.vector3(10, 10, 0)
+local intersec = vmath.vector3(10, 10, 0)
+
+local hit_result = false
+
+function init(self)
+
+    tilemap_url = msg.url("main:/tilemap#example")
+
+    ray_start_url = msg.url("/ray_start")
+    ray_end_url = msg.url("ray_end")
+
+    -- LuaFormatter off
+	local tiles = {
+		2,2,2,2,2,2,2,2,2,2,
+		2,2,2,2,2,2,2,2,2,2,
+		2,2,2,2,2,2,2,2,2,2,
+		2,2,1,2,2,2,2,2,2,2,
+		2,2,2,2,2,2,2,2,2,2,
+		1,2,1,2,2,2,1,1,1,1,
+		1,1,1,2,2,2,1,1,1,1,
+		1,1,1,2,1,2,1,1,1,1,
+		1,1,1,1,2,1,1,1,1,1,
+		1,1,1,2,2,2,2,1,1,1
+	}
+	-- LuaFormatter on
+
+    -- TileMap Settings
+    local tile_width = 32
+    local tile_height = 32
+    local target_tiles = {2} -- Not implemented yet
+    local tilemap_width = 10
+    local tilemap_height = 10
+
+    -- You can get bounds from tilemap
+    -- local _, _, tilemap_width, tilemap_height = tilemap.get_bounds(tilemap_url) 
+
+    -- Set tilemap
+    local tile_id = 1
+    local pos_x = 1 -- flip tilemap
+
+    for y = tilemap_height, 1, -1 do
+        for x = tilemap_width, 1, -1 do
+            tilemap.set_tile(tilemap_url, "layer1", pos_x, y, tiles[tile_id])
+            tile_id = tile_id + 1
+            pos_x = pos_x + 1
+        end
+        pos_x = 1
+    end
+
+    -- Init raycast 
+    ---@param tile_width int  @Single tile width
+    ---@param tile_height int  @Single tile height
+    ---@param tilemap_width int  @Tilemap width
+    ---@param tilemap_height int  @Tilemap height
+    ---@param tiles table  @1D Tiles table
+    ---@param target_tiles table  @Which tiles are not passible. You should keep is simple. 
+    ---@param print_array bool @(optional) Print result array 
+    raycast.init(tile_width, tile_height, tilemap_width, tilemap_height, tiles, target_tiles)
+
+    -- Initial ray positions
+    ray_from = go.get_position(ray_start_url)
+    ray_to = go.get_position(ray_end_url)
+
+    ---@param ray_from Vector3  @Start position of ray
+    ---@param ray_to Vector3  @End position of ray
+    ---@return hit  @If hit or not
+    ---@return tile_x  @Tile x position
+    ---@return tile_y  @Tile y position
+    ---@return tile_id  @ID of the tile for Tilemap
+    ---@return intersection_x  @Ray intersection point x
+    ---@return intersection_y  @Ray intersection point y
+    ---@return side  @Which side hit. 0 for LEFT-RIGHT, 1 for TOP-BOTTOM
+    local hit, tile_x, tile_y, tile_id, intersection_x, intersection_y, side = raycast.cast(ray_from, ray_to)
+
+    if hit then
+        print("tile_x: " .. tile_x)
+        print("tile_y: " .. tile_y)
+        print("tile_id " .. tile_id)
+        print("intersection_x " .. intersection_x)
+        print("intersection_y " .. intersection_y)
+        print("Side " .. side) -- 0 for LEFT-RIGHT, 1 for TOP-BOTTOM
+
+        hit_result = true
+        intersec.x = intersection_x
+        intersec.y = intersection_y
+    else
+        hit_result = false
+        print("No result found")
+    end
+
+end
+
+function update(self, dt)
+    if hit_result then
+        msg.post("@render:", "draw_line", {start_point = ray_from, end_point = ray_to, color = vmath.vector4(1, 0, 0, 1)})
+        msg.post("@render:", "draw_line", {start_point = ray_from, end_point = intersec, color = vmath.vector4(1, 1, 0, 1)})
+        debugdraw.circle(intersec.x, intersec.y, 15, debugdraw.COLORS.green)
+    end
+end
+
+function on_input(self, action_id, action)
+    -- Add input-handling code here. The game object this script is attached to
+    -- must have acquired input focus:
+    --
+    --    msg.post(".", "acquire_input_focus")
+    --
+    -- All mapped input bindings will be received. Mouse and touch input will
+    -- be received regardless of where on the screen it happened.
+    -- Learn more: https://defold.com/manuals/input/
+    -- Remove this function if not needed
+end
+
+function on_reload(self)
+    -- Add reload-handling code here
+    -- Learn more: https://defold.com/manuals/hot-reload/
+    -- Remove this function if not needed
+end

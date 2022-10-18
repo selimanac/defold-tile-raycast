@@ -1,0 +1,37 @@
+[bootstrap]
+main_collection = /example/example.collectionc
+render = /orthographic/render/orthographic.renderc
+
+[script]
+shared_state = 1
+
+[project]
+title = Tile Raycast
+developer = Selim Anac
+dependencies#0 = https://github.com/rgrams/debug-draw/archive/master.zip
+dependencies#1 = https://github.com/britzl/defold-orthographic/archive/master.zip
+dependencies#2 = https://github.com/britzl/defold-metrics/archive/master.zip
+
+[library]
+include_dirs = raycast
+
+[input]
+game_binding = /input/game.input_bindingc
+use_accelerometer = 0
+
+[graphics]
+default_texture_min_filter = linear
+default_texture_mag_filter = linear
+max_debug_vertices = 100000
+
+[sprite]
+subpixels = 0
+
+[tilemap]
+max_tile_count = 4096
+
+[render]
+clear_color_red = 0.1
+clear_color_green = 0.1
+clear_color_blue = 0.1
+
