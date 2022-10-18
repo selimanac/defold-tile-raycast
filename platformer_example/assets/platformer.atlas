@@ -1,0 +1,135 @@
+images {
+  image: "/platformer_example/assets/Background/Brown.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+animations {
+  id: "hero_idle"
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/idle/tile000.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/idle/tile001.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/idle/tile002.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/idle/tile003.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/idle/tile004.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/idle/tile005.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/idle/tile006.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/idle/tile007.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/idle/tile008.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/idle/tile009.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/idle/tile010.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 20
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "hero_run"
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/run/tile000.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/run/tile001.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/run/tile002.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/run/tile003.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/run/tile004.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/run/tile005.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/run/tile006.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/run/tile007.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/run/tile008.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/run/tile009.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/run/tile010.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/run/tile011.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 20
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "hero_jump"
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/Jump (32x32).png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_NONE
+  fps: 0
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "hero_fall"
+  images {
+    image: "/platformer_example/assets/Main Characters/Mask Dude/Fall (32x32).png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_NONE
+  fps: 0
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+margin: 0
+extrude_borders: 2
+inner_padding: 0

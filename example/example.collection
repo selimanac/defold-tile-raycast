@@ -33,29 +33,6 @@ instances {
     z: 0.0
     w: 1.0
   }
-  component_properties {
-    id: "script"
-    properties {
-      id: "zoom"
-      value: "1.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "projection"
-      value: "FIXED_ZOOM"
-      type: PROPERTY_TYPE_HASH
-    }
-    properties {
-      id: "follow"
-      value: "false"
-      type: PROPERTY_TYPE_BOOLEAN
-    }
-    properties {
-      id: "follow_target"
-      value: ""
-      type: PROPERTY_TYPE_HASH
-    }
-  }
   scale3 {
     x: 1.0
     y: 1.0
@@ -201,8 +178,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 150.0
-    y: -62.0
+    x: 99.0
+    y: 407.0
     z: 0.0
   }
   rotation {

@@ -1,6 +1,6 @@
-image: "/assets/images/test_tile.png"
-tile_width: 32
-tile_height: 32
+image: "/platformer_example/assets/Terrain/Terrain (16x16).png"
+tile_width: 16
+tile_height: 16
 tile_margin: 0
 tile_spacing: 0
 collision: ""

@@ -13,34 +13,6 @@ instances {
     z: 0.0
     w: 1.0
   }
-  component_properties {
-    id: "script"
-    properties {
-      id: "zoom"
-      value: "0.5"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "projection"
-      value: "FIXED_AUTO"
-      type: PROPERTY_TYPE_HASH
-    }
-    properties {
-      id: "follow"
-      value: "true"
-      type: PROPERTY_TYPE_BOOLEAN
-    }
-    properties {
-      id: "follow_target"
-      value: "/logo"
-      type: PROPERTY_TYPE_HASH
-    }
-    properties {
-      id: "follow_lerp"
-      value: "0.3"
-      type: PROPERTY_TYPE_NUMBER
-    }
-  }
   scale3 {
     x: 1.0
     y: 1.0
@@ -84,6 +56,8 @@ embedded_instances {
   "    z: 0.0\n"
   "    w: 1.0\n"
   "  }\n"
+  "  property_decls {\n"
+  "  }\n"
   "}\n"
   ""
   position {
@@ -118,6 +92,8 @@ embedded_instances {
   "    y: 0.0\n"
   "    z: 0.0\n"
   "    w: 1.0\n"
+  "  }\n"
+  "  property_decls {\n"
   "  }\n"
   "}\n"
   ""

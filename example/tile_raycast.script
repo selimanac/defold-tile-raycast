@@ -17,9 +17,16 @@ function init(self)
     msg.post(".", "acquire_input_focus")
 
     tilemap_url = msg.url("main:/tilemap#example")
-
     ray_start_url = msg.url("/ray_start")
     ray_end_url = msg.url("ray_end")
+
+    -- movement stuff
+    self.input = vmath.vector3()
+    self.direction = vmath.vector3()
+    self.speed = 0
+    self.acceleration = 500
+    self.deceleration = 1000
+    self.max_speed = 500
 
     -- LuaFormatter off
 	local tiles = {
@@ -39,7 +46,7 @@ function init(self)
     -- TileMap Settings
     local tile_width = 32
     local tile_height = 32
-    local target_tiles = {2,3,4} -- Not implemented yet
+    local target_tiles = {2, 3, 4}
     local tilemap_width = 10
     local tilemap_height = 10
 
@@ -104,20 +111,40 @@ end
 
 function update(self, dt)
 
+    -- Initial ray results
     if hit_result then
         msg.post("@render:", "draw_line", {start_point = ray_from, end_point = target_world_position, color = vmath.vector4(1, 0, 0, 1)})
         msg.post("@render:", "draw_line", {start_point = ray_from, end_point = intersec, color = vmath.vector4(1, 1, 0, 1)})
         debugdraw.circle(intersec.x, intersec.y, 15, debugdraw.COLORS.green)
     end
 
+    -- movement stuff
+    if self.input.x ~= 0 or self.input.y ~= 0 then
+        self.direction = self.input
+        self.speed = self.speed + self.acceleration * dt
+        self.speed = math.min(self.speed, self.max_speed)
+    else
+        self.speed = self.speed - self.deceleration * dt
+        self.speed = math.max(self.speed, 0)
+    end
+    ray_from = ray_from + self.direction * self.speed * dt
+    go.set_position(ray_from, ray_start_url)
+    self.input = vmath.vector3()
+
+    -- ray hit and  results
     local hit, tile_x, tile_y, tile_id, intersection_x, intersection_y, side = raycast.cast(ray_from, target_world_position)
     if hit then
+        hit_result = false
         intersec.x = intersection_x
         intersec.y = intersection_y
         msg.post("@render:", "draw_line", {start_point = ray_from, end_point = target_world_position, color = vmath.vector4(1, 0, 0, 1)})
         msg.post("@render:", "draw_line", {start_point = ray_from, end_point = intersec, color = vmath.vector4(1, 1, 0, 1)})
         debugdraw.circle(intersec.x, intersec.y, 15, debugdraw.COLORS.green)
+        tilemap.set_tile(tilemap_url, "layer1", tile_x, tile_y, 4)
+
     end
+
+    msg.post("@render:", "draw_debug_text", {text = "Use A/W/S/D to move", position = vmath.vector3(10, 30, 0), color = vmath.vector4(1, 1, 1, 1)})
 end
 
 function on_input(self, action_id, action)
@@ -128,5 +155,15 @@ function on_input(self, action_id, action)
     target_world_position = camera.screen_to_world(CAMERA_ID, ray_to)
 
     go.set_position(target_world_position, ray_end_url)
+
+    if action_id == hash("up") then
+        self.input.y = 1
+    elseif action_id == hash("down") then
+        self.input.y = -1
+    elseif action_id == hash("left") then
+        self.input.x = -1
+    elseif action_id == hash("right") then
+        self.input.x = 1
+    end
 end
 

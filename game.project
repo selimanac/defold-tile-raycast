@@ -1,5 +1,5 @@
 [bootstrap]
-main_collection = /example/example.collectionc
+main_collection = /platformer_example/platformer.collectionc
 render = /orthographic/render/orthographic.renderc
 
 [script]
@@ -20,8 +20,8 @@ game_binding = /input/game.input_bindingc
 use_accelerometer = 0
 
 [graphics]
-default_texture_min_filter = linear
-default_texture_mag_filter = linear
+default_texture_min_filter = nearest
+default_texture_mag_filter = nearest
 max_debug_vertices = 100000
 
 [sprite]
