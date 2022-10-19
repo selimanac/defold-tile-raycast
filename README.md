@@ -28,7 +28,8 @@ Initial setup for raycast.
 
 **EXAMPLE**
 ```lua
-	local tiles = {
+	
+    local tiles = {
 		4,2,2,2,0,2,2,2,2,2,
 		2,2,2,2,0,2,2,2,2,2,
 		2,2,2,2,0,2,2,2,2,2,
@@ -72,7 +73,8 @@ Perform raycast on tilemap. Returns first successful hit.
 
 **EXAMPLE**
 ```lua
-	local ray_from = go.get_position(ray_start_url)
+	
+    local ray_from = go.get_position(ray_start_url)
     local ray_to = go.get_position(ray_end_url)
 
     local hit, tile_x, tile_y, array_id, tile_id, intersection_x, intersection_y, side = raycast.cast(ray_from, ray_to)
