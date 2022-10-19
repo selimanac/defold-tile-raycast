@@ -92,20 +92,6 @@ static int init(lua_State *L)
         lua_pop(L, 1);
     }
 
-    // Optional print output
-    if (lua_isboolean(L, 7) && lua_toboolean(L, 7) == true)
-    {
-        for (int i = 0; i < aTilemap.Size(); i++)
-        {
-            printf("%i, ", aTilemap[i]);
-            if (i == 9 || i == 19 || i == 29 || i == 39 || i == 49 || i == 59 || i == 69 || i == 79 || i == 89)
-            {
-                printf("\n---\n");
-            }
-        }
-        printf("\n---\n");
-    }
-
     return 0;
 }
 
