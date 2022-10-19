@@ -31,9 +31,11 @@ int tile_x = 0;
 int tile_y = 0;
 int side = 0;
 int luaPosition = 1;
+int tile_type = 0;
 
 dmArray<int> aTilemap;
 dmArray<int> aTargetTiles;
+// dmArray<int> aCollisionTiles;
 
 static float distance(dmVMath::Vector3 *v1, dmVMath::Vector3 *v2)
 {
@@ -61,6 +63,7 @@ static int init(lua_State *L)
     vTileSize.setY(iTileHeight);
 
     aTilemap.SetCapacity((iTilemapWidth * iTilemapHeight));
+    // aCollisionTiles.SetCapacity(iTilemapWidth * iTilemapHeight);
 
     /* Tilemap */
     luaL_checktype(L, 5, LUA_TTABLE);
@@ -170,14 +173,14 @@ static int cast(lua_State *L)
     {
         if (vRayLength1D.getX() < vRayLength1D.getY())
         {
-            vMapCheck.setX(vMapCheck.getX() + vStep.getX());
+            vMapCheck.setX((int)(vMapCheck.getX() + vStep.getX()));
             fDistance = vRayLength1D.getX();
             vRayLength1D.setX(vRayLength1D.getX() + vRayUnitStepSize.getX());
             side = 0;
         }
         else
         {
-            vMapCheck.setY(vMapCheck.getY() + vStep.getY());
+            vMapCheck.setY((int)(vMapCheck.getY() + vStep.getY()));
             fDistance = vRayLength1D.getY();
             vRayLength1D.setY(vRayLength1D.getY() + vRayUnitStepSize.getY());
             side = 1;
@@ -190,16 +193,37 @@ static int cast(lua_State *L)
             tile_y = (int)(vMapCheck.getY() / vTileSize.getY());
             tile = (iTilemapHeight * iTilemapWidth) - ((iTilemapHeight * tile_y) + (iTilemapWidth - tile_x));
 
+            tile = tile_y * vTilemapSize.getX() + tile_x;
+
             for (int i = 0; i < aTargetTiles.Size(); i++)
             {
                 if (aTilemap[tile] == aTargetTiles[i])
                 {
-
+                    tile_type = aTargetTiles[i];
                     bTileFound = true;
+
+                    /*  if (aCollisionTiles.Full())
+                     {
+                         aCollisionTiles.SetCapacity(aCollisionTiles.Capacity() + 100);
+                     }
+                     aCollisionTiles.Push(tile); */
                 }
             }
         }
     }
+
+    /*  if (aCollisionTiles.Size() > 0)
+     {
+         bTileFound = true;
+     } */
+
+    /* printf("-------\n");
+    for (int i = 0; i < aCollisionTiles.Size(); i++)
+    {
+        printf("%i \n", aCollisionTiles[i]);
+    }
+    printf("-------\n");
+    aCollisionTiles.SetSize(0); */
 
     // Calculate intersection location
     if (bTileFound)
@@ -213,10 +237,11 @@ static int cast(lua_State *L)
 
     if (bTileFound)
     {
-        luaPosition += 6;               // +6 if hit
+        luaPosition += 7;               // +7 if hit
         lua_pushinteger(L, tile_x + 1); // +1 for lua table
         lua_pushinteger(L, tile_y + 1); // +1 for lua table
         lua_pushinteger(L, tile + 1);   // +1 for lua table
+        lua_pushinteger(L, tile_type);  // +1 for lua table
         lua_pushnumber(L, vIntersection.getX());
         lua_pushnumber(L, vIntersection.getY());
         lua_pushinteger(L, side);

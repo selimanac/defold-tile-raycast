@@ -28,9 +28,10 @@ function init(self)
     self.deceleration = 1000
     self.max_speed = 500
 
+    -- Y is down(It will be upside down)
     -- LuaFormatter off
 	local tiles = {
-		2,2,2,2,0,2,2,2,2,2,
+		4,2,2,2,0,2,2,2,2,2,
 		2,2,2,2,0,2,2,2,2,2,
 		2,2,2,2,0,2,2,2,2,2,
 		2,2,1,2,2,2,2,2,2,2,
@@ -39,7 +40,8 @@ function init(self)
 		1,1,1,2,2,2,1,1,1,1,
 		1,1,1,2,1,2,1,3,1,1,
 		1,1,1,1,2,1,1,1,4,1,
-		1,1,1,2,2,2,2,1,1,1
+		1,1,1,2,2,2,2,1,1,3,
+        1,1,1,1,1,1,1,1,1,1  
 	}
 	-- LuaFormatter on
 
@@ -48,22 +50,19 @@ function init(self)
     local tile_height = 32
     local target_tiles = {2, 3, 4}
     local tilemap_width = 10
-    local tilemap_height = 10
+    local tilemap_height = 11
 
     -- You can get bounds from tilemap
     -- local _, _, tilemap_width, tilemap_height = tilemap.get_bounds(tilemap_url) 
 
     -- Set tilemap
     local tile_id = 1
-    local pos_x = 1 -- flip tilemap
 
-    for y = tilemap_height, 1, -1 do
-        for x = tilemap_width, 1, -1 do
-            tilemap.set_tile(tilemap_url, "layer1", pos_x, y, tiles[tile_id])
+    for y = 1, tilemap_height do
+        for x = 1, tilemap_width do
+            tilemap.set_tile(tilemap_url, "layer1", x, y, tiles[tile_id])
             tile_id = tile_id + 1
-            pos_x = pos_x + 1
         end
-        pos_x = 1
     end
 
     -- Init raycast 
@@ -85,15 +84,17 @@ function init(self)
     ---@return hit  @If hit or not
     ---@return tile_x  @Tile x position
     ---@return tile_y  @Tile y position
-    ---@return tile_id  @ID of the tile for Tilemap
+    ---@return array_id  @ID of the array for Tilemap
+    ---@return tile_id  @ID of the tile from tilesource for Tilemap 
     ---@return intersection_x  @Ray intersection point x
     ---@return intersection_y  @Ray intersection point y
     ---@return side  @Which side hit. 0 for LEFT-RIGHT, 1 for TOP-BOTTOM
-    local hit, tile_x, tile_y, tile_id, intersection_x, intersection_y, side = raycast.cast(ray_from, ray_to)
+    local hit, tile_x, tile_y, array_id, tile_id, intersection_x, intersection_y, side = raycast.cast(ray_from, ray_to)
 
     if hit then
         print("tile_x: " .. tile_x)
         print("tile_y: " .. tile_y)
+        print("array_id " .. array_id)
         print("tile_id " .. tile_id)
         print("intersection_x " .. intersection_x)
         print("intersection_y " .. intersection_y)
@@ -132,7 +133,7 @@ function update(self, dt)
     self.input = vmath.vector3()
 
     -- ray hit and  results
-    local hit, tile_x, tile_y, tile_id, intersection_x, intersection_y, side = raycast.cast(ray_from, target_world_position)
+    local hit, tile_x, tile_y, array_id, tile_id, intersection_x, intersection_y, side = raycast.cast(ray_from, target_world_position)
     if hit then
         hit_result = false
         intersec.x = intersection_x

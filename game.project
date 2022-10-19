@@ -35,3 +35,6 @@ clear_color_red = 0.1
 clear_color_green = 0.1
 clear_color_blue = 0.1
 
+[display]
+width = 1280
+
