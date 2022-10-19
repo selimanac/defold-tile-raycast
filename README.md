@@ -53,7 +53,7 @@ Initial setup for raycast.
 
 
 ## raycast.cast (`ray_from`, `ray_to`)
-Perform input and state handling for a checkbox
+Perform raycast on tilemap. Returns first successful hit.
 
 **PARAMETERS**
 * ```ray_from``` (Vector3) - Start position of ray
