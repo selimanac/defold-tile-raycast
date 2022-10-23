@@ -10,7 +10,7 @@ https://github.com/selimanac/defold-tile-raycast/archive/refs/heads/master.zip
 
 # Example
 
-WIP
+https://github.com/selimanac/defold-tile-raycast-platformer
 
 # API
 

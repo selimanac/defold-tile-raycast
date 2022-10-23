@@ -107,6 +107,26 @@ function init(self)
         print("No result found")
     end
 
+    ---@param ray_from Vector3  @Start position of ray
+    ---@param ray_to Vector3  @End position of ray
+    ---@return hit  @If hit or not
+    ---@return tile_x  @Tile x position
+    ---@return tile_y  @Tile y position
+    ---@return array_id  @ID of the array for Tilemap array
+    ---@return tile_id  @ID of the tile from tilesource for Tilemap 
+    ---@return intersection_x  @Ray intersection point x
+    ---@return intersection_y  @Ray intersection point y
+    ---@return side  @Which side hit. 0 for LEFT-RIGHT, 1 for TOP-BOTTOM
+    local hit, result = raycast.cast(ray_from, ray_to, true)
+
+    if hit then
+        pprint(result)
+
+    else
+
+        print("No result found")
+    end
+
 end
 
 function update(self, dt)
@@ -145,8 +165,6 @@ function update(self, dt)
 
     end
 
-    msg.post("@render:", "draw_debug_text", {text = "Use A/W/S/D to move", position = vmath.vector3(10, 30, 0), color = vmath.vector4(1, 1, 1, 1)})
-    
 end
 
 function on_input(self, action_id, action)

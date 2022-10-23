@@ -1,5 +1,5 @@
 [bootstrap]
-main_collection = /platformer_example/platformer.collectionc
+main_collection = /example/example.collectionc
 render = /orthographic/render/orthographic.renderc
 
 [script]
