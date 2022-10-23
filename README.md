@@ -1,10 +1,10 @@
 # Tile Raycast
-Ray Casting in Tiled Worlds using DDA.  
+Ray Casting in tiled worlds using DDA.  
 This implementation based on https://lodev.org/cgtutor/raycasting.html and https://www.youtube.com/watch?v=NbSee-XM7WA
 
 
 # Installation
-You can use Gooey in your own project by adding this project as a [Defold library dependency](http://www.defold.com/manuals/libraries/). Open your game.project file and in the dependencies field under project add:
+You can use Tiled Ray Cast in your own project by adding this project as a [Defold library dependency](http://www.defold.com/manuals/libraries/). Open your game.project file and in the dependencies field under project add:
 
 https://github.com/selimanac/defold-tile-raycast/archive/refs/heads/master.zip
 
@@ -23,8 +23,8 @@ Initial setup for raycast.
 * ```tile_height``` (int) - Single tile height
 * ```tilemap_width``` (int) - Tilemap width
 * ```tilemap_height``` (int) - Tilemap height
-* ```tiles``` (table) - Single dimention tiles table generated from your tilemap.
-* ```target_tiles``` (table) - Not passible tiles from tilesource.
+* ```tiles``` (table) - Single dimensional tiles table generated from your tilemap (or from your source).
+* ```target_tiles``` (table) - Not passible tile IDs from your tilesource (walls, grounds etc...).
 
 **EXAMPLE**
 ```lua
