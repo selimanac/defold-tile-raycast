@@ -54,7 +54,7 @@ Initial setup for raycast.
 
 
 ## raycast.cast (`ray_from`, `ray_to`)
-Perform raycast on tilemap. Returns first successful hit.
+Perform raycast on tilemap. Returns **only first** successful hit.
 
 **PARAMETERS**
 * ```ray_from``` (Vector3) - Start position of ray
