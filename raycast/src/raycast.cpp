@@ -176,7 +176,6 @@ static int cast(lua_State *L)
         {
             tile_x = (int)(vMapCheck.getX() / vTileSize.getX());
             tile_y = (int)(vMapCheck.getY() / vTileSize.getY());
-            //  tile = (iTilemapHeight * iTilemapWidth) - ((iTilemapHeight * tile_y) + (iTilemapWidth - tile_x));
 
             tile = tile_y * vTilemapSize.getX() + tile_x;
 
@@ -184,7 +183,6 @@ static int cast(lua_State *L)
             {
                 if (aTilemap[tile] == aTargetTiles[i])
                 {
-
                     tile_type = aTargetTiles[i];
                     bTileFound = true;
                 }
