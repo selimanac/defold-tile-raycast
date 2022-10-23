@@ -1,5 +1,5 @@
 # Tile Raycast
-Ray Casting in tiled worlds using DDA.  
+Ray Casting in tiled worlds using DDA algorithm. It is very effective solution for tile based worlds like platformers or any top-down games.  
 This implementation based on https://lodev.org/cgtutor/raycasting.html and https://www.youtube.com/watch?v=NbSee-XM7WA
 
 
