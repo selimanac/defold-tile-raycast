@@ -2,6 +2,7 @@
 #define LIB_NAME "raycast"
 #define MODULE_NAME "raycast"
 
+
 #include <dmsdk/dlib/hashtable.h>
 #include <dmsdk/sdk.h>
 
@@ -111,8 +112,8 @@ static int cast(lua_State *L)
 
     vRayDir = normalize(*vRayEnd - *vRayStart);
 
-    vRayUnitStepSize.setX(abs(1.0f / vRayDir.getX()));
-    vRayUnitStepSize.setY(abs(1.0f / vRayDir.getY()));
+    vRayUnitStepSize.setX(fabs(1.0f / vRayDir.getX()));
+    vRayUnitStepSize.setY(fabs(1.0f / vRayDir.getY()));
 
     vMapCheck = *vRayStart;
 
