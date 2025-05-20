@@ -64,30 +64,14 @@ function init(self)
         end
     end
 
-    -- Init raycast
-    ---@param tile_width number  @Single tile width
-    ---@param tile_height int  @Single tile height
-    ---@param tilemap_width int  @Tilemap width
-    ---@param tilemap_height int  @Tilemap height
-    ---@param tiles table  @1D Tiles table
-    ---@param target_tiles table  @Which tiles are not passible. You should keep it simple.
     tile_raycast.setup(tile_width, tile_height, tilemap_width, tilemap_height, tiles, target_tiles)
 
     -- Initial ray positions
     ray_from = go.get_position(ray_start_url)
     ray_to = go.get_position(ray_end_url)
 
-    ---@param ray_from Vector3  @Start position of ray
-    ---@param ray_to Vector3  @End position of ray
-    ---@return hit  @If hit or not
-    ---@return tile_x  @Tile x position
-    ---@return tile_y  @Tile y position
-    ---@return array_id  @ID of the array for Tilemap array
-    ---@return tile_id  @ID of the tile from tilesource for Tilemap
-    ---@return intersection_x  @Ray intersection point x
-    ---@return intersection_y  @Ray intersection point y
-    ---@return side  @Which side hit. 0 for LEFT-RIGHT, 1 for TOP-BOTTOM
-    local hit, tile_x, tile_y, array_id, tile_id, intersection_x, intersection_y, side = tile_raycast.result(ray_from.x, ray_from.y, ray_to.x, ray_to.y)
+
+    local hit, tile_x, tile_y, array_id, tile_id, intersection_x, intersection_y, side = tile_raycast.cast(ray_from.x, ray_from.y, ray_to.x, ray_to.y)
 
     if hit then
         print("tile_x: " .. tile_x)
@@ -106,17 +90,8 @@ function init(self)
         print("No result found")
     end
 
-    ---@param ray_from Vector3  @Start position of ray
-    ---@param ray_to Vector3  @End position of ray
-    ---@return hit  @If hit or not
-    ---@return tile_x  @Tile x position
-    ---@return tile_y  @Tile y position
-    ---@return array_id  @ID of the array for Tilemap array
-    ---@return tile_id  @ID of the tile from tilesource for Tilemap
-    ---@return intersection_x  @Ray intersection point x
-    ---@return intersection_y  @Ray intersection point y
-    ---@return side  @Which side hit. 0 for LEFT-RIGHT, 1 for TOP-BOTTOM
-    local hit, result = tile_raycast.result(ray_from.x, ray_from.y, ray_to.x, ray_to.y)
+
+    local hit, result = tile_raycast.cast(ray_from.x, ray_from.y, ray_to.x, ray_to.y)
 
     if hit then
         pprint(result)
@@ -147,7 +122,7 @@ function update(self, dt)
     self.input = vmath.vector3()
 
     -- ray hit and  results
-    local hit, tile_x, tile_y, array_id, tile_id, intersection_x, intersection_y, side = tile_raycast.result(ray_from.x, ray_from.y, target_world_position.x, target_world_position.y)
+    local hit, tile_x, tile_y, array_id, tile_id, intersection_x, intersection_y, side = tile_raycast.cast(ray_from.x, ray_from.y, target_world_position.x, target_world_position.y)
 
     if hit then
         hit_result = false

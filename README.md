@@ -17,7 +17,7 @@ https://github.com/selimanac/defold-tile-raycast/archive/refs/heads/master.zip
 
 # API
 
-### tile_raycast.setup (tile_width, tile_heigh,tilemap_width, tilemap_height, tiles, target_tiles)
+### tile_raycast.setup(`tile_width`, `tile_heigh`,`tilemap_width`,`tilemap_height`,`tiles`,`target_tiles`)
 
 Initial setup for raycasting.  
 
@@ -56,7 +56,7 @@ Initial setup for raycasting.
 ``` 
 
 
-### tile_raycast.cast (ray_from_x, ray_from_y, ray_to_x, `ray_to_y`)
+### tile_raycast.cast(`ray_from_x`,`ray_from_y`,`ray_to_x`, `ray_to_y`)
 
 Performs a raycast on the tilemap. Returns **only the first** successful hit.
 
@@ -98,7 +98,7 @@ Performs a raycast on the tilemap. Returns **only the first** successful hit.
         print("tile_id " .. tile_id)
         print("intersection_x " .. intersection_x)
         print("intersection_y " .. intersection_y)
-        print("Side " .. side) -- 0 for LEFT-RIGHT, 1 for TOP-BOTTOM
+        print("Side " .. side) 
     else
         print("No result found")
     end
