@@ -8,18 +8,12 @@ Thumbs.db
 .project
 .cproject
 builtins
-/.vscode
-.vscode
+*.sublime-project
+*.sublime-workspace
+.clang-format
+compile_commands.json
+/.cache
 *.der
-.vscode/*
-.vscode/settings.json
-.vscode/tasks.json
-.vscode/launch.json
-.vscode/extensions.json
-.vscode/*.code-snippets
-
-# Local History for Visual Studio Code
-.history/
-
-# Built Visual Studio Code Extensions
-*.vsix
+RELEASE-NOTES.md
+/.editor_settings
+build_config.json
