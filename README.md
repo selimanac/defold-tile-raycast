@@ -13,9 +13,7 @@ You can use Tiled Raycast in your own project by adding this project as a [Defol
 
 https://github.com/selimanac/defold-tile-raycast/archive/refs/heads/master.zip
 
-# Example
 
-https://github.com/selimanac/defold-tile-raycast-platformer
 
 # API
 
@@ -78,6 +76,12 @@ Performs a raycast on the tilemap. Returns **only the first** successful hit.
 * `intersection_y` (float) – Y coordinate of the ray intersection point.
 * `side` (enum) – The side of the tile that was hit.
 
+   **tile_raycast.LEFT** 
+   **tile_raycast.RIGHT** 
+   **tile_raycast.TOP** 
+   **tile_raycast.BOTTOM** :
+
+
 
 **EXAMPLE**
 ```lua
@@ -85,7 +89,7 @@ Performs a raycast on the tilemap. Returns **only the first** successful hit.
     local ray_from = go.get_position(ray_start_url)
     local ray_to = go.get_position(ray_end_url)
 
-    local hit, tile_x, tile_y, array_id, tile_id, intersection_x, intersection_y, side = tile_raycast.cast(ray_from, ray_to)
+    local hit, tile_x, tile_y, array_id, tile_id, intersection_x, intersection_y, side = tile_raycast.cast(ray_from.x,ray_from.y, ray_to.x,ray_to.y)
 
      if hit then
         print("tile_x: " .. tile_x)
@@ -124,4 +128,9 @@ Returns the tile ID from the map array at the specified coordinates.
 ## tile_raycast.reset()
 
 Clears all tile and tilemap data.
+
+
+
+
+
 

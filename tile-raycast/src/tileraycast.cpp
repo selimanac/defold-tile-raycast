@@ -137,6 +137,16 @@ static void LuaInit(lua_State* L)
     // Register lua names
     luaL_register(L, MODULE_NAME, Module_methods);
 
+#define SETCONSTANT(name) \
+    lua_pushnumber(L, (lua_Number)dda::name); \
+    lua_setfield(L, -2, #name);
+
+    SETCONSTANT(LEFT);
+    SETCONSTANT(RIGHT);
+    SETCONSTANT(TOP);
+    SETCONSTANT(BOTTOM);
+#undef SETCONSTANT
+
     lua_pop(L, 1);
     assert(top == lua_gettop(L));
 }
