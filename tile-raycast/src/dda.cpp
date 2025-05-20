@@ -46,12 +46,6 @@ namespace dda
         }
     }
 
-    /*    void subtract_vec2(const dda::Vec2* a, const dda::Vec2* b, dda::Vec2* result)
-        {
-            result->x = a->x - b->x;
-            result->y = a->y - b->y;
-        }*/
-
     void Init(const uint16_t tile_width, const uint16_t tile_height, const uint16_t map_width, const uint16_t map_height, const dmArray<uint16_t>* tile_map, const dmArray<uint16_t>* target_tiles)
     {
         // Settings
@@ -150,9 +144,9 @@ namespace dda
                     m_Side = Side::TOP;
             }
 
-            // Test tile
+            // Bound check
             if (m_MapCheck.x >= 0 && m_MapCheck.x < (m_Settings.m_Width * m_Settings.m_TileWidth) &&
-                m_MapCheck.y >= 0 && m_MapCheck.x < (m_Settings.m_Height * m_Settings.m_TileHeight))
+                m_MapCheck.y >= 0 && m_MapCheck.y < (m_Settings.m_Height * m_Settings.m_TileHeight))
             {
                 m_TileX = m_MapCheck.x / m_Settings.m_TileWidth;
                 m_TileY = m_MapCheck.y / m_Settings.m_TileHeight;
@@ -184,7 +178,7 @@ namespace dda
     void Reset()
     {
         m_Tilemap.SetSize(0);
-        m_TargetTiles.Size();
+        m_TargetTiles.Clear();
     }
 
     bool SetupCheck()
