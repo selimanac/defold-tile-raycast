@@ -1,12 +1,15 @@
 ![Tile Raycast](/assets/tile_raycast_2400x666.png)
 
 # Tile Raycast
-Ray Casting in tiled worlds using DDA algorithm. It is very effective solution for tile based worlds like platformers or any top-down games.  
-This implementation based on https://lodev.org/cgtutor/raycasting.html and https://www.youtube.com/watch?v=NbSee-XM7WA
+Raycasting in tiled worlds using the DDA algorithm. It is a very effective solution for tile-based worlds such as platformers or top-down games.    
 
+This implementation is inspired by:  
+https://lodev.org/cgtutor/raycasting.html  
+https://www.youtube.com/watch?v=NbSee-XM7WA  
 
 # Installation
-You can use Tiled Ray Cast in your own project by adding this project as a [Defold library dependency](http://www.defold.com/manuals/libraries/). Open your game.project file and in the dependencies field under project add:
+
+You can use Tiled Raycast in your own project by adding this project as a [Defold library dependency](http://www.defold.com/manuals/libraries/). Open your `game.project` file and in the `dependencies` field under `project`, add:
 
 https://github.com/selimanac/defold-tile-raycast/archive/refs/heads/master.zip
 
@@ -16,17 +19,17 @@ https://github.com/selimanac/defold-tile-raycast-platformer
 
 # API
 
-## raycast.init (`tile_width`, `tile_height`, `tilemap_width`, `tilemap_height`, `tiles`, `target_tiles`)
+## tile_raycast.setup (`tile_width`, `tile_height`, `tilemap_width`, `tilemap_height`, `tiles`, `target_tiles`)
 
-Initial setup for raycast.
+Initial setup for raycasting.  
 
 **PARAMETERS**
-* ```tile_width``` (int) - Single tile width
-* ```tile_height``` (int) - Single tile height
-* ```tilemap_width``` (int) - Tilemap width
-* ```tilemap_height``` (int) - Tilemap height
-* ```tiles``` (table) - Single dimensional tiles table generated from your tilemap (or from your source).
-* ```target_tiles``` (table) - Not passible tile IDs from your tilesource (walls, grounds etc...).
+* `tile_width` (uint16_t) – Width of a single tile.
+* `tile_height` (uint16_t) – Height of a single tile.
+* `tilemap_width` (uint16_t) – Number of tiles horizontally in the tilemap.
+* `tilemap_height` (uint16_t) – Number of tiles vertically in the tilemap.
+* `tiles` (table - uint16_t ) – One-dimensional tile table generated from your tilemap or source data.
+* `target_tiles` (table - uint16_t) – IDs of impassable tiles from your tilesource (e.g., walls, ground, etc.).
 
 **EXAMPLE**
 ```lua
@@ -51,26 +54,29 @@ Initial setup for raycast.
     local tilemap_width = 10
     local tilemap_height = 11
 
-    raycast.init(tile_width, tile_height, tilemap_width, tilemap_height, tiles, target_tiles)
+    tile_raycast.setup(tile_width, tile_height, tilemap_width, tilemap_height, tiles, target_tiles)
 ``` 
 
 
-## raycast.cast (`ray_from`, `ray_to`)
-Perform raycast on tilemap. Returns **only first** successful hit.
+## tile_raycast.cast (`ray_from_x`, `ray_from_y`, `ray_to_x`, `ray_to_y`)
+
+Performs a raycast on the tilemap. Returns **only the first** successful hit.
 
 **PARAMETERS**
-* ```ray_from``` (Vector3) - Start position of ray
-* ```ray_to``` (Vector3) - End position of ray
+* `ray_from_x` (float) – Start position of the ray (X).
+* `ray_from_y` (float) – Start position of the ray (Y).
+* `ray_to_x` (float) – End position of the ray (X).
+* `ray_to_y` (float) – End position of the ray (Y).
 
 **RETURN**
-* ```hit``` (boolean) - If hit or not
-* ```tile_x``` (int) - ile x position
-* ```tile_y``` (int) - Tile y position
-* ```array_id``` (int) - ID of the array for Tilemap array
-* ```tile_id``` (int) - ID of the tile from tilesource for Tilemap 
-* ```intersection_x``` (number) - Ray intersection point x
-* ```intersection_y``` (number) - Ray intersection point y
-* ```side``` (int) - Which side hit. 0 for LEFT-RIGHT, 1 for TOP-BOTTOM
+* `hit` (boolean) – Whether a tile was hit.
+* `tile_x` (uint16_t) – X position of the tile.
+* `tile_y` (uint16_t) – Y position of the tile.
+* `array_id` (uint16_t) – Index in the tilemap array.
+* `tile_id` (uint16_t) – ID of the tile from the tilesource.
+* `intersection_x` (float) – X coordinate of the ray intersection point.
+* `intersection_y` (float) – Y coordinate of the ray intersection point.
+* `side` (enum) – The side of the tile that was hit.
 
 
 **EXAMPLE**
@@ -79,7 +85,7 @@ Perform raycast on tilemap. Returns **only first** successful hit.
     local ray_from = go.get_position(ray_start_url)
     local ray_to = go.get_position(ray_end_url)
 
-    local hit, tile_x, tile_y, array_id, tile_id, intersection_x, intersection_y, side = raycast.cast(ray_from, ray_to)
+    local hit, tile_x, tile_y, array_id, tile_id, intersection_x, intersection_y, side = tile_raycast.cast(ray_from, ray_to)
 
      if hit then
         print("tile_x: " .. tile_x)
@@ -94,5 +100,28 @@ Perform raycast on tilemap. Returns **only first** successful hit.
     end
 ``` 
 
-## raycast.reset ()
-Clear all tile and timemap data.
+## tile_raycast.set_at(`tile_x`, `tile_y`, `tile_id`)
+
+Sets a tile value in the map array at the specified coordinates.
+
+**PARAMETERS**
+* `tile_x` (uint16_t) – Tile X coordinate.
+* `tile_y` (uint16_t) – Tile Y coordinate.
+* `tile_id` (uint16_t) – Tile ID to set.
+
+
+## tile_raycast.get_at(`tile_x`, `tile_y`)
+
+Returns the tile ID from the map array at the specified coordinates.
+
+**PARAMETERS**
+* `tile_x` (uint16_t) – Tile X coordinate.
+* `tile_y` (uint16_t) – Tile Y coordinate.
+
+**RETURN**
+* `tile_id` (uint16_t) – Tile ID at the given coordinates.
+
+## tile_raycast.reset()
+
+Clears all tile and tilemap data.
+

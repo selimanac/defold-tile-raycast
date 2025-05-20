@@ -1,3 +1,5 @@
+#include "dmsdk/script/script.h"
+#include <cstdint>
 #define LIB_NAME "TileRaycast"
 #define MODULE_NAME "tile_raycast"
 
@@ -6,13 +8,13 @@
 
 dda::RayResult m_RayResult;
 
-static int     Reset(lua_State* L)
+static int     RaycastReset(lua_State* L)
 {
     dda::Reset();
     return 0;
 }
 
-static int Setup(lua_State* L)
+static int RaycastSetup(lua_State* L)
 {
     // Reset
     dda::Reset();
@@ -61,7 +63,7 @@ static int Setup(lua_State* L)
     return 0;
 }
 
-static int Result(lua_State* L)
+static int RaycastResult(lua_State* L)
 {
     if (!dda::SetupCheck())
     {
@@ -98,11 +100,33 @@ static int Result(lua_State* L)
     return lua_position;
 }
 
+static int RaycastSetAt(lua_State* L)
+{
+    uint16_t tile_x = luaL_checkint(L, 1) - 1;
+    uint16_t tile_y = luaL_checkint(L, 2) - 1;
+
+    lua_pushinteger(L, dda::GetAt(tile_x, tile_y));
+    return 1;
+}
+
+static int RaycastGetAt(lua_State* L)
+{
+    uint16_t tile_x = luaL_checkint(L, 1) - 1;
+    uint16_t tile_y = luaL_checkint(L, 2) - 1;
+    uint16_t tile = luaL_checkint(L, 3);
+
+    dda::SetAt(tile_x, tile_y, tile);
+
+    return 0;
+}
+
 // Functions exposed to Lua
 static const luaL_reg Module_methods[] = {
-    { "reset", Reset },
-    { "result", Result },
-    { "setup", Setup },
+    { "reset", RaycastReset },
+    { "cast", RaycastResult },
+    { "setup", RaycastSetup },
+    { "set_at", RaycastSetAt },
+    { "get_at", RaycastGetAt },
     { 0, 0 }
 };
 
@@ -117,12 +141,6 @@ static void LuaInit(lua_State* L)
     assert(top == lua_gettop(L));
 }
 
-static dmExtension::Result AppInitializeTileRaycast(dmExtension::AppParams* params)
-{
-    dmLogInfo("AppInitializeTileRaycast");
-    return dmExtension::RESULT_OK;
-}
-
 static dmExtension::Result InitializeTileRaycast(dmExtension::Params* params)
 {
     // Init Lua
@@ -131,50 +149,11 @@ static dmExtension::Result InitializeTileRaycast(dmExtension::Params* params)
     return dmExtension::RESULT_OK;
 }
 
-static dmExtension::Result AppFinalizeTileRaycast(dmExtension::AppParams* params)
-{
-    dmLogInfo("AppFinalizeTileRaycast");
-    return dmExtension::RESULT_OK;
-}
-
 static dmExtension::Result FinalizeTileRaycast(dmExtension::Params* params)
 {
+    dda::Reset();
     dmLogInfo("FinalizeTileRaycast");
     return dmExtension::RESULT_OK;
 }
 
-static dmExtension::Result OnUpdateTileRaycast(dmExtension::Params* params)
-{
-    //  dmLogInfo("OnUpdateTileRaycast");
-    return dmExtension::RESULT_OK;
-}
-
-static void OnEventTileRaycast(dmExtension::Params* params, const dmExtension::Event* event)
-{
-    /* switch (event->m_Event)
-     {
-         case dmExtension::EVENT_ID_ACTIVATEAPP:
-             dmLogInfo("OnEventTileRaycast - EVENT_ID_ACTIVATEAPP");
-             break;
-         case dmExtension::EVENT_ID_DEACTIVATEAPP:
-             dmLogInfo("OnEventTileRaycast - EVENT_ID_DEACTIVATEAPP");
-             break;
-         case dmExtension::EVENT_ID_ICONIFYAPP:
-             dmLogInfo("OnEventTileRaycast - EVENT_ID_ICONIFYAPP");
-             break;
-         case dmExtension::EVENT_ID_DEICONIFYAPP:
-             dmLogInfo("OnEventTileRaycast - EVENT_ID_DEICONIFYAPP");
-             break;
-         default:
-             dmLogWarning("OnEventTileRaycast - Unknown event id");
-             break;
-     }*/
-}
-
-// Defold SDK uses a macro for setting up extension entry points:
-//
-// DM_DECLARE_EXTENSION(symbol, name, app_init, app_final, init, update, on_event, final)
-
-// TileRaycast is the C++ symbol that holds all relevant extension data.
-// It must match the name field in the `ext.manifest`
-DM_DECLARE_EXTENSION(TileRaycast, LIB_NAME, AppInitializeTileRaycast, AppFinalizeTileRaycast, InitializeTileRaycast, OnUpdateTileRaycast, OnEventTileRaycast, FinalizeTileRaycast)
+DM_DECLARE_EXTENSION(TileRaycast, LIB_NAME, 0, 0, InitializeTileRaycast, 0, 0, FinalizeTileRaycast)

@@ -1,5 +1,6 @@
 #include "dda.h"
 #include "dmsdk/dlib/hashtable.h"
+#include "dmsdk/dlib/log.h"
 #include <cmath>
 #include <cstdint>
 
@@ -26,12 +27,21 @@ namespace dda
     Side                m_Side;
     Vec2                m_Intersection;
 
-    static inline float Distance(const Vec2* v1, const Vec2* v2)
+    inline float        Distance(const Vec2* v1, const Vec2* v2)
     {
-        return sqrt(pow((v2->x - v1->x), 2) + pow((v2->y - v1->y), 2));
+        float dx = v2->x - v1->x;
+        float dy = v2->y - v1->y;
+        return sqrtf(dx * dx + dy * dy);
+        // return sqrt(pow((v2->x - v1->x), 2) + pow((v2->y - v1->y), 2));
+        //  return sqrt((v2->x - v1->x) * (v2->x - v1->x) + (v2->y - v1->y) * (v2->y - v1->y));
     }
 
-    static inline void Normalize(const Vec2* in, Vec2* out)
+    inline float DistanceSquared(const Vec2* v1, const Vec2* v2)
+    {
+        return (v2->x - v1->x) * (v2->x - v1->x) + (v2->y - v1->y) * (v2->y - v1->y);
+    }
+
+    inline void Normalize(const Vec2* in, Vec2* out)
     {
         float length = sqrtf(in->x * in->x + in->y * in->y);
         if (length > 0.0f)
@@ -184,5 +194,38 @@ namespace dda
     bool SetupCheck()
     {
         return (m_Tilemap.Size() > 0 && m_TargetTiles.Size() > 0);
+    }
+
+    inline bool BoundCheck(uint16_t tile_x, uint16_t tile_y)
+    {
+        return tile_x < m_Settings.m_Width && tile_y < m_Settings.m_Height;
+    }
+
+    void SetAt(uint16_t tile_x, uint16_t tile_y, uint16_t value)
+    {
+        if (BoundCheck(tile_x, tile_y))
+        {
+            uint32_t index = tile_y * m_Settings.m_Width + tile_x;
+            m_Tilemap[index] = value;
+        }
+        else
+        {
+            dmLogError("Out of tilemap bounds. Tile X: %u -  Tile Y: %u - ", tile_x, tile_y);
+        }
+    }
+
+    uint16_t GetAt(uint16_t tile_x, uint16_t tile_y)
+    {
+        if (BoundCheck(tile_x, tile_y))
+        {
+            uint32_t index = tile_y * m_Settings.m_Width + tile_x;
+            return m_Tilemap[index];
+        }
+        else
+        {
+            dmLogError("Out of tilemap bounds. Tile X: %u -  Tile Y: %u - ", tile_x, tile_y);
+        }
+
+        return 0;
     }
 } // namespace dda
