@@ -149,9 +149,9 @@ namespace dda
                 m_RayLength1D.y = m_RayLength1D.y + m_UnitStepSize.y;
 
                 if (m_Step.y < 0)
-                    m_Side = Side::BOTTOM;
-                else
                     m_Side = Side::TOP;
+                else
+                    m_Side = Side::BOTTOM;
             }
 
             // Bound check
