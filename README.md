@@ -17,7 +17,7 @@ https://github.com/selimanac/defold-tile-raycast/archive/refs/heads/master.zip
 
 # API
 
-## tile_raycast.setup (`tile_width`, `tile_height`, `tilemap_width`, `tilemap_height`, `tiles`, `target_tiles`)
+### tile_raycast.setup (tile_width, tile_heigh,tilemap_width, tilemap_height, tiles, target_tiles)
 
 Initial setup for raycasting.  
 
@@ -56,7 +56,7 @@ Initial setup for raycasting.
 ``` 
 
 
-## tile_raycast.cast (`ray_from_x`, `ray_from_y`, `ray_to_x`, `ray_to_y`)
+### tile_raycast.cast (ray_from_x, ray_from_y, ray_to_x, `ray_to_y`)
 
 Performs a raycast on the tilemap. Returns **only the first** successful hit.
 
@@ -76,10 +76,10 @@ Performs a raycast on the tilemap. Returns **only the first** successful hit.
 * `intersection_y` (float) – Y coordinate of the ray intersection point.
 * `side` (enum) – The side of the tile that was hit.
 
-   **tile_raycast.LEFT** 
-   **tile_raycast.RIGHT** 
-   **tile_raycast.TOP** 
-   **tile_raycast.BOTTOM** :
+   **tile_raycast.LEFT**   
+   **tile_raycast.RIGHT**   
+   **tile_raycast.TOP**   
+   **tile_raycast.BOTTOM**   
 
 
 
@@ -104,7 +104,7 @@ Performs a raycast on the tilemap. Returns **only the first** successful hit.
     end
 ``` 
 
-## tile_raycast.set_at(`tile_x`, `tile_y`, `tile_id`)
+### tile_raycast.set_at(`tile_x`, `tile_y`, `tile_id`)
 
 Sets a tile value in the map array at the specified coordinates.
 
@@ -114,7 +114,7 @@ Sets a tile value in the map array at the specified coordinates.
 * `tile_id` (uint16_t) – Tile ID to set.
 
 
-## tile_raycast.get_at(`tile_x`, `tile_y`)
+### tile_raycast.get_at(`tile_x`, `tile_y`)
 
 Returns the tile ID from the map array at the specified coordinates.
 
@@ -125,7 +125,7 @@ Returns the tile ID from the map array at the specified coordinates.
 **RETURN**
 * `tile_id` (uint16_t) – Tile ID at the given coordinates.
 
-## tile_raycast.reset()
+### tile_raycast.reset()
 
 Clears all tile and tilemap data.
 
