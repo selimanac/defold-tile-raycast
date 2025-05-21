@@ -14,6 +14,10 @@ You can use Tiled Raycast in your own project by adding this project as a [Defol
 https://github.com/selimanac/defold-tile-raycast/archive/refs/heads/master.zip
 
 
+# Example
+
+For v1: https://github.com/selimanac/defold-tile-raycast-platformer  
+
 
 # API
 

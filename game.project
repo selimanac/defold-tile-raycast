@@ -6,7 +6,7 @@ render = /orthographic/render/orthographic.renderc
 shared_state = 1
 
 [project]
-title = Tile Raycast
+title = defold-tile-raycast
 developer = Selim Anac
 dependencies#0 = https://github.com/rgrams/debug-draw/archive/master.zip
 dependencies#1 = https://github.com/britzl/defold-orthographic/archive/master.zip
