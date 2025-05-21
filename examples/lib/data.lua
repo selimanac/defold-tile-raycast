@@ -10,4 +10,6 @@ data.enemies = {}
 
 data.mouse_position = vmath.vector3(0.9)
 
+data.bullets = {}
+
 return data

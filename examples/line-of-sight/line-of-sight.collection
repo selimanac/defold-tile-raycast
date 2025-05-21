@@ -38,5 +38,13 @@ embedded_instances {
   "  id: \"hero\"\n"
   "  component: \"/components/hero.factory\"\n"
   "}\n"
+  "components {\n"
+  "  id: \"bullet_impact\"\n"
+  "  component: \"/components/bullet_impact.factory\"\n"
+  "}\n"
+  "components {\n"
+  "  id: \"bullet_enemy\"\n"
+  "  component: \"/components/bullet_enemy.factory\"\n"
+  "}\n"
   ""
 }

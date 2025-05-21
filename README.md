@@ -23,7 +23,7 @@ For v1: https://github.com/selimanac/defold-tile-raycast-platformer
 
 ### Ray Casting in Games
 
-    2D Top-Down Roguelikes: Games like "The Binding of Isaac" and "Enter the Gungeon" use ray casting for line-of-sight calculations, bullet trajectory, and lighting
+    2D Top-Down Roguelikes: Games like "The Binding of Isaac" and "Enter the Gungeon" use ray casting for line-of-sight calculations, bullet trajectory.
     Wolfenstein 3D and similar pseudo-3D engines: The original Wolfenstein 3D used DDA-based ray casting to create a 3D-like environment from a 2D map
     Minecraft uses a variation for block targeting and lighting calculations
 

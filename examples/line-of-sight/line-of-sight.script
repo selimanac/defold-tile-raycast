@@ -4,12 +4,16 @@ local hero = require("examples.lib.hero")
 local collision = require("examples.lib.collision")
 local enemy = require("examples.lib.enemy")
 local data = require("examples.lib.data")
-
+local bullet = require("examples.lib.bullet")
+local game_camera = require("examples.lib.game_camera")
 
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+	--	profiler.enable_ui(true)
+	profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
 	collision.init()
+	game_camera.init()
 
 	local target_tiles = {}
 
@@ -50,6 +54,12 @@ function init(self)
 			if enemy_tile ~= 0 then
 				enemy.add(tile_position_x, tile_position_y)
 			end
+
+			-- props
+			local prop_tile = tilemap.get_tile("/tilemap#line-of-sight", hash("props"), x, y)
+			if prop_tile ~= 0 then
+				collision.insert_aabb(tile_position_x, tile_position_y, const.TILE_SIZE, const.TILE_SIZE, const.COLLISION_BITS.WALL)
+			end
 		end
 	end
 
@@ -68,6 +78,7 @@ end
 function update(self, dt)
 	hero.update(dt)
 	enemy.update(dt)
+	bullet.update(dt)
 end
 
 function on_input(self, action_id, action)

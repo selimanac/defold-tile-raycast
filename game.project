@@ -25,6 +25,7 @@ max_debug_vertices = 100000
 
 [sprite]
 subpixels = 1
+max_count = 128
 
 [tilemap]
 max_tile_count = 4096
@@ -38,3 +39,4 @@ clear_color_blue = 0.137255
 max_group_count = 1
 max_gameobject_count = 128
 max_query_result_count = 32
+

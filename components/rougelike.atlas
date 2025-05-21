@@ -13,4 +13,29 @@ images {
 images {
   image: "/assets/projectile.png"
 }
+images {
+  image: "/assets/projectile_enemy.png"
+}
+animations {
+  id: "bullet_impact"
+  images {
+    image: "/assets/impact_1.png"
+  }
+  images {
+    image: "/assets/impact_2.png"
+  }
+  images {
+    image: "/assets/impact_3.png"
+  }
+  images {
+    image: "/assets/impact_4.png"
+  }
+  images {
+    image: "/assets/impact_5.png"
+  }
+  images {
+    image: "/assets/blank.png"
+  }
+  fps: 24
+}
 extrude_borders: 2
