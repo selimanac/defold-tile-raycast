@@ -159,8 +159,8 @@ Returns the tile ID from the map array at the specified coordinates.
 * `tile_id` (uint16_t) – Tile ID at the given coordinates.
 
 ---
-Hi! I recently found your YouTube channel and I just wanted to say your Defold content is amazing — it's really well-made and professional. I'm currently struggling to learn Defold, but I'm really motivated to get better at it. To be honest, I feel like the official documentation isn’t always enough, especially compared to some of the GitHub projects I’ve found.
-If you don't mind me asking, how did you learn so much about Defold? I'd really appreciate any tips or resources you could share. Thanks for the inspiration, and keep up the great work! 😁
+
+
 ### tile_raycast.reset()
 
 Clears all tile and tilemap data.
