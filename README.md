@@ -19,6 +19,31 @@ https://github.com/selimanac/defold-tile-raycast/archive/refs/heads/master.zip
 For v1: https://github.com/selimanac/defold-tile-raycast-platformer  
 
 
+# Usage Examples (ChatGPT)
+
+### Ray Casting in Games
+
+    2D Top-Down Roguelikes: Games like "The Binding of Isaac" and "Enter the Gungeon" use ray casting for line-of-sight calculations, bullet trajectory, and lighting
+    Wolfenstein 3D and similar pseudo-3D engines: The original Wolfenstein 3D used DDA-based ray casting to create a 3D-like environment from a 2D map
+    Minecraft uses a variation for block targeting and lighting calculations
+
+### Line-of-Sight Systems
+
+    Tactical games like "XCOM" and "Into the Breach" use DDA for determining visibility between units
+    Stealth games for guard vision cones and detection systems
+
+### Procedural Generation
+
+    Dungeon crawlers like "Rogue Legacy" use it for connecting rooms and ensuring paths are traversable
+    Spelunky and similar games for procedural level interconnections
+
+### Other Applications
+
+    Tower defense games for targeting and projectile calculations
+    Strategy games for unit visibility and pathing calculations
+    Battle royale games for circle/zone damage calculations across grid terrain
+
+
 # API
 
 ### tile_raycast.setup(`tile_width`, `tile_heigh`,`tilemap_width`,`tilemap_height`,`tiles`,`target_tiles`)
@@ -59,6 +84,7 @@ Initial setup for raycasting.
     tile_raycast.setup(tile_width, tile_height, tilemap_width, tilemap_height, tiles, target_tiles)
 ``` 
 
+---
 
 ### tile_raycast.cast(`ray_from_x`,`ray_from_y`,`ray_to_x`, `ray_to_y`)
 
@@ -108,6 +134,8 @@ Performs a raycast on the tilemap. Returns **only the first** successful hit.
     end
 ``` 
 
+---
+
 ### tile_raycast.set_at(`tile_x`, `tile_y`, `tile_id`)
 
 Sets a tile value in the map array at the specified coordinates.
@@ -117,6 +145,7 @@ Sets a tile value in the map array at the specified coordinates.
 * `tile_y` (uint16_t) – Tile Y coordinate.
 * `tile_id` (uint16_t) – Tile ID to set.
 
+---
 
 ### tile_raycast.get_at(`tile_x`, `tile_y`)
 
@@ -128,6 +157,8 @@ Returns the tile ID from the map array at the specified coordinates.
 
 **RETURN**
 * `tile_id` (uint16_t) – Tile ID at the given coordinates.
+
+---
 
 ### tile_raycast.reset()
 
