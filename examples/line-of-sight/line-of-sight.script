@@ -1,0 +1,76 @@
+local const = require("examples.lib.const")
+local cursor = require("examples.lib.cursor")
+local hero = require("examples.lib.hero")
+local collision = require("examples.lib.collision")
+local enemy = require("examples.lib.enemy")
+local data = require("examples.lib.data")
+
+
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	collision.init()
+
+	local target_tiles = {}
+
+	local _, _, tilemap_width, tilemap_height = tilemap.get_bounds("/tilemap#line-of-sight")
+
+
+	-- Set camera to center
+	go.set_position(vmath.vector3((tilemap_width * const.TILE_SIZE) / 2, (tilemap_height * const.TILE_SIZE) / 2, 0), "/camera")
+
+
+	-- Generate Map array
+	local tile = 0
+	local map = {}
+	local tile_ids = {}
+	local tile_position_x = 0
+	local tile_position_y = 0
+
+	for y = 1, tilemap_height do
+		for x = 1, tilemap_width do
+			-- Map
+			tile = tilemap.get_tile("/tilemap#line-of-sight", hash("map"), x, y)
+			tile_position_x = (x * const.TILE_SIZE) - const.TILE_SIZE / 2
+			tile_position_y = (y * const.TILE_SIZE) - const.TILE_SIZE / 2
+			table.insert(map, tile)
+			if tile ~= 0 then
+				tile_ids[tile] = tile
+				collision.insert_aabb(tile_position_x, tile_position_y, const.TILE_SIZE, const.TILE_SIZE, const.COLLISION_BITS.WALL)
+			end
+
+			-- Hero
+			local hero_tile = tilemap.get_tile("/tilemap#line-of-sight", hash("hero"), x, y)
+			if hero_tile ~= 0 then
+				hero.add(tile_position_x, tile_position_y)
+			end
+
+			-- Enemy
+			local enemy_tile = tilemap.get_tile("/tilemap#line-of-sight", hash("enemies"), x, y)
+			if enemy_tile ~= 0 then
+				enemy.add(tile_position_x, tile_position_y)
+			end
+		end
+	end
+
+	for _, v in pairs(tile_ids) do
+		table.insert(target_tiles, v)
+	end
+
+
+	tile_raycast.setup(const.TILE_SIZE, const.TILE_SIZE, tilemap_width, tilemap_height, map, target_tiles)
+end
+
+function final(self)
+	tile_raycast.reset()
+end
+
+function update(self, dt)
+	hero.update(dt)
+	enemy.update(dt)
+end
+
+function on_input(self, action_id, action)
+	cursor.input(action)
+	hero.input(action_id, action)
+end

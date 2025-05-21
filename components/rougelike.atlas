@@ -1,0 +1,16 @@
+images {
+  image: "/assets/cursor.png"
+}
+images {
+  image: "/assets/kenney_micro-roguelike/Tiles/Colored/hero.png"
+}
+images {
+  image: "/assets/kenney_micro-roguelike/Tiles/Colored/enemy_1.png"
+}
+images {
+  image: "/assets/kenney_micro-roguelike/Tiles/Colored/enemy_2.png"
+}
+images {
+  image: "/assets/projectile.png"
+}
+extrude_borders: 2
