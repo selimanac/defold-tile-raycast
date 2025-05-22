@@ -1,17 +1,17 @@
-local const = require("examples.lib.const")
-local cursor = require("examples.lib.cursor")
-local hero = require("examples.lib.hero")
-local collision = require("examples.lib.collision")
-local enemy = require("examples.lib.enemy")
-local data = require("examples.lib.data")
-local bullet = require("examples.lib.bullet")
-local game_camera = require("examples.lib.game_camera")
+local const = require("examples.scripts.const")
+local cursor = require("examples.scripts.cursor")
+local hero = require("examples.scripts.hero")
+local collision = require("examples.scripts.collision")
+local enemy = require("examples.scripts.enemy")
+local data = require("examples.scripts.data")
+local bullet = require("examples.scripts.bullet")
+local game_camera = require("examples.scripts.game_camera")
 
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	--profiler.enable_ui(true)
-	--	profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
+	profiler.enable_ui(true)
+	profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
 	collision.init()
 	game_camera.init()
 
@@ -77,7 +77,7 @@ end
 
 function update(self, dt)
 	hero.update(dt)
-	enemy.update(dt)
+	enemy.vision_update(dt)
 	bullet.update(dt)
 end
 

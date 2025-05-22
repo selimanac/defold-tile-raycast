@@ -12,15 +12,15 @@ embedded_instances {
   id: "tilemap"
   data: "components {\n"
   "  id: \"line-of-sight\"\n"
-  "  component: \"/examples/line-of-sight/line-of-sight.tilemap\"\n"
+  "  component: \"/examples/vision-cone/vision-cone.tilemap\"\n"
   "}\n"
   ""
 }
 embedded_instances {
   id: "script"
   data: "components {\n"
-  "  id: \"line-of-sight\"\n"
-  "  component: \"/examples/line-of-sight/line-of-sight.script\"\n"
+  "  id: \"vision-cone\"\n"
+  "  component: \"/examples/vision-cone/vision-cone.script\"\n"
   "}\n"
   ""
 }

@@ -727,13 +727,8 @@ layers {
   id: "enemies"
   z: 0.0
   cell {
-    x: 21
+    x: 22
     y: 2
-    tile: 11
-  }
-  cell {
-    x: 26
-    y: 7
     tile: 11
   }
   cell {

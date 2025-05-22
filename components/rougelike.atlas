@@ -16,6 +16,9 @@ images {
 images {
   image: "/assets/projectile_enemy.png"
 }
+images {
+  image: "/assets/warning.png"
+}
 animations {
   id: "bullet_impact"
   images {
@@ -38,7 +41,6 @@ animations {
   }
   fps: 24
 }
-
 animations {
   id: "bullet_enemy_impact"
   images {
