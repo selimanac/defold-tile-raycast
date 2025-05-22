@@ -1,5 +1,7 @@
 local data = {}
 
+data.debug = true
+
 data.player = {
 	position = vmath.vector3(0.5),
 	id = "",

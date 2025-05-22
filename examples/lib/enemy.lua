@@ -2,11 +2,12 @@ local collision = require("examples.lib.collision")
 local const = require("examples.lib.const")
 local data = require("examples.lib.data")
 local bullet = require("examples.lib.bullet")
+local debug = require("examples.lib.debug")
+
 
 local enemy = {}
 local ray_intersection = vmath.vector3()
 
--- Configure firing rate
 local ENEMY_FIRE_COOLDOWN = 2.0 -- Seconds between shots
 
 function enemy.add(tile_position_x, tile_position_y)
@@ -19,7 +20,7 @@ function enemy.add(tile_position_x, tile_position_y)
 		id = enemy_id,
 		aabb_id = aabb_id,
 		position = enemy_position,
-		fire_timer = math.random() * ENEMY_FIRE_COOLDOWN -- Random initial timer to prevent all enemies firing at once
+		fire_timer = rnd.double() * ENEMY_FIRE_COOLDOWN -- Random initial timer to prevent all enemies firing at once
 	}
 
 	table.insert(data.enemies, temp_enemy)
@@ -33,7 +34,7 @@ function enemy.update(dt)
 		end
 
 		-- Perform raycast to check if player is visible
-		local hit, tile_x, tile_y, array_id, tile_id, intersection_x, intersection_y, side =
+		local hit, _, _, _, _, intersection_x, intersection_y, _ =
 			tile_raycast.cast(enemy_item.position.x, enemy_item.position.y, data.player.position.x, data.player.position.y)
 
 		if hit then
@@ -41,31 +42,18 @@ function enemy.update(dt)
 			ray_intersection.x = intersection_x
 			ray_intersection.y = intersection_y
 
-			msg.post("@render:", "draw_line", {
-				start_point = ray_intersection,
-				end_point = data.player.position,
-				color = vmath.vector4(1, 0, 0, 1)
-			})
 
-			msg.post("@render:", "draw_line", {
-				start_point = enemy_item.position,
-				end_point = ray_intersection,
-				color = vmath.vector4(0, 1, 0, 1)
-			})
+			debug.draw_line(ray_intersection, data.player.position, debug.COLOR.RED)
+			debug.draw_line(enemy_item.position, ray_intersection, debug.COLOR.GREEN)
 		else
 			-- Player visible - check if can fire
 			if enemy_item.fire_timer <= 0 then
 				-- Fire bullet and reset timer
-				bullet.add(enemy_item.position, data.player.position, const.COLLISION_BITS.PLAYER)
+				bullet.add(enemy_item.position, data.player.position, const.COLLISION_BITS.PLAYER, const.ENEMY.BULLETS.SINGLE)
 				enemy_item.fire_timer = ENEMY_FIRE_COOLDOWN
 			end
 
-			-- Draw debug line showing line of sight
-			msg.post("@render:", "draw_line", {
-				start_point = enemy_item.position,
-				end_point = data.player.position,
-				color = vmath.vector4(0, 1, 0, 1)
-			})
+			debug.draw_line(enemy_item.position, data.player.position, debug.COLOR.GREEN)
 		end
 	end
 end

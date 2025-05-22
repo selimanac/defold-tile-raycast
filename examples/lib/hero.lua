@@ -2,6 +2,7 @@ local data = require("examples.lib.data")
 local const = require("examples.lib.const")
 local collision = require("examples.lib.collision")
 local bullet = require("examples.lib.bullet")
+local debug = require("examples.lib.debug")
 
 local hero = {}
 
@@ -70,11 +71,11 @@ function hero.update(dt)
 		ray_intersection.x = intersection_x
 		ray_intersection.y = intersection_y
 
-		msg.post("@render:", "draw_line", { start_point = ray_intersection, end_point = data.mouse_position, color = vmath.vector4(1, 0, 0, 1) })
+		debug.draw_line(ray_intersection, data.mouse_position, debug.COLOR.RED)
 
-		msg.post("@render:", "draw_line", { start_point = data.player.position, end_point = ray_intersection, color = vmath.vector4(0, 1, 0, 1) })
+		debug.draw_line(data.player.position, ray_intersection, debug.COLOR.GREEN)
 	else
-		msg.post("@render:", "draw_line", { start_point = data.player.position, end_point = data.mouse_position, color = vmath.vector4(0, 1, 0, 1) })
+		debug.draw_line(data.player.position, data.mouse_position, debug.COLOR.GREEN)
 	end
 end
 
@@ -89,7 +90,7 @@ function hero.input(action_id, action)
 	elseif action_id == const.TRIGGER.RIGHT then
 		input.x = 1
 	elseif action_id == const.TRIGGER.TOUCH and action.repeated then
-		bullet.add(data.player.position, data.mouse_position, const.COLLISION_BITS.ENEMY)
+		bullet.add(data.player.position, data.mouse_position, const.COLLISION_BITS.ENEMY, const.PLAYER.BULLETS.SINGLE)
 	end
 end
 

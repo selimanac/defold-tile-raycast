@@ -2,22 +2,20 @@ local data = require("examples.lib.data")
 local const = require("examples.lib.const")
 local collision = require("examples.lib.collision")
 
-local bullet = {}
+local bullets = {}
 
--- Configuration
 local BULLET_SPEED = 60
 local BULLET_LIFETIME = 5
 local BULLET_SIZE = 4
 
-local TRAIL_SEGMENTS = 5    -- Number of trail segments per bullet
-local TRAIL_SPACING = 0.03  -- Time between trail segments (seconds)
-local TRAIL_FADE_TIME = 0.4 -- Animation duration for fading
+local TRAIL_SEGMENTS = 5
+local TRAIL_SPACING = 0.03
+local TRAIL_FADE_TIME = 0.4
 
-local bullets = {}
+local bullet_list = {}
 local to_remove = {}
 
--- Create all trail segments for a new bullet
-local function create_trail_segments(position)
+local function create_trail_segments(position, bullet_type)
 	local trail_segments = {}
 
 	for i = 1, TRAIL_SEGMENTS do
@@ -28,9 +26,9 @@ local function create_trail_segments(position)
 
 		local trail_sprite = msg.url(trail_id)
 		trail_sprite.fragment = "sprite"
+		sprite.play_flipbook(trail_sprite, bullet_type)
 		go.set(trail_sprite, "tint", vmath.vector4(1, 1, 1, 0))
 
-		-- Store trail segment info
 		table.insert(trail_segments, {
 			id = trail_id,
 			sprite_url = trail_sprite,
@@ -41,7 +39,6 @@ local function create_trail_segments(position)
 
 	return trail_segments
 end
-
 
 local function activate_trail_segment(bullet)
 	local segment = bullet.trail_segments[bullet.trail_index]
@@ -78,17 +75,34 @@ local function delete_trail_segments(bullet)
 	end
 end
 
-function bullet.add(start_pos, aim_pos, collision_bit)
+local function bullet_impact(pos_x, pos_y, impact_type)
+	local impact_id = factory.create("/factories#bullet_impact", vmath.vector3(pos_x, pos_y, 0.7))
+
+	local impact_sprite = msg.url(impact_id)
+	impact_sprite.fragment = "sprite"
+	sprite.play_flipbook(impact_sprite, impact_type, function(self, message_id, message, sender)
+		if message_id == hash("animation_done") then
+			go.delete(impact_sprite)
+		end
+	end)
+end
+
+function bullets.add(start_pos, aim_pos, collision_bit, bullet_type)
 	local bullet_direction = vmath.normalize(aim_pos - start_pos)
 	bullet_direction.z = 0
+
 	local bullet_position = vmath.vector3(start_pos.x, start_pos.y, 0.6)
 	local bullet_id = factory.create("/factories#bullet", bullet_position)
+
+	local bullet_sprite = msg.url(bullet_id)
+	bullet_sprite.fragment = "sprite"
+	sprite.play_flipbook(bullet_sprite, bullet_type.PROJECTILE)
 
 	-- Add collision for bullet
 	local aabb_id = collision.insert_gameobject(msg.url(bullet_id), BULLET_SIZE, BULLET_SIZE, const.COLLISION_BITS.BULLET)
 
 	-- Store bullet data
-	table.insert(bullets, {
+	table.insert(bullet_list, {
 		id = bullet_id,
 		aabb_id = aabb_id,
 		position = bullet_position,
@@ -97,105 +111,86 @@ function bullet.add(start_pos, aim_pos, collision_bit)
 		hit = false,
 		collision_bit = collision_bit,
 		trail_timer = 0,
-		trail_segments = create_trail_segments(bullet_position),
-		trail_index = 1
+		trail_segments = create_trail_segments(bullet_position, bullet_type.PROJECTILE),
+		trail_index = 1,
+		type = bullet_type
 	})
 end
 
-local function bullet_impact(pos_x, pos_y)
-	local impact_id = factory.create("/factories#bullet_impact", vmath.vector3(pos_x, pos_y, 0.7))
-
-	local impact_sprite = msg.url(impact_id)
-	impact_sprite.fragment = "sprite"
-	sprite.play_flipbook(impact_sprite, hash("bullet_impact"), function(self, message_id, message, sender)
-		if message_id == hash("animation_done") then
-			go.delete(impact_sprite)
-		end
-	end)
-end
-
-function bullet.update(dt)
+function bullets.update(dt)
 	to_remove = {}
 
-	for i, b in ipairs(bullets) do
-		if not b.hit then
-			-- Update lifetime
-			b.lifetime = b.lifetime - dt
+	for i, bullet in ipairs(bullet_list) do
+		if not bullet.hit then
+			bullet.lifetime = bullet.lifetime - dt
 
-			-- Update trail system
-			update_trail(b, dt)
+			update_trail(bullet, dt)
 
-			-- Calculate new position
-			local new_pos = b.position + b.direction * BULLET_SPEED * dt
+			local new_pos = bullet.position + bullet.direction * BULLET_SPEED * dt
 
 			-- Use raycast for wall detection
-			local hit, hit_tile_x, hit_tile_y, array_id, tile_id, hit_x, hit_y, side =
-				tile_raycast.cast(b.position.x, b.position.y, new_pos.x, new_pos.y)
+			local hit, _, _, _, _, hit_x, hit_y, side =
+				tile_raycast.cast(bullet.position.x, bullet.position.y, new_pos.x, new_pos.y)
 
 			if hit then
 				-- Bullet hit wall
 
-				b.position.x = hit_x
-				b.position.y = hit_y
-				b.hit = true
-				--impact
-				--local impact_id = factory.create("/factories#bullet_impact", vmath.vector3(hit_x, hit_y, 0.7))
-				bullet_impact(hit_x, hit_y)
+				bullet.position.x = hit_x
+				bullet.position.y = hit_y
+				bullet.hit = true
+
+				bullet_impact(hit_x, hit_y, bullet.type.IMPACT)
 			else
 				-- Update position
-				b.position = new_pos
+				bullet.position = new_pos
 
 				-- Check collisions
 				--		collision.update_aabb(b.aabb_id, b.position.x, b.position.y, BULLET_SIZE, BULLET_SIZE)
 
-				local results, count = collision.query_id(b.aabb_id, b.collision_bit, true)
+				local results, count = collision.query_id(bullet.aabb_id, bullet.collision_bit, true)
 				if results then
 					for j = 1, count do
-						--	factory.create("/factories#bullet_impact", vmath.vector3(results[j].contact_point_x, results[j].contact_point_y, 0.7))
-
-						bullet_impact(results[j].contact_point_x, results[j].contact_point_y)
-						b.hit = true
+						bullet_impact(results[j].contact_point_x, results[j].contact_point_y, bullet.type.IMPACT)
+						bullet.hit = true
 						break
 					end
 				end
 			end
 
 			-- Update bullet visual position
-			go.set_position(b.position, b.id)
+			go.set_position(bullet.position, bullet.id)
 		end
 
-		-- Mark for removal if needed
-		if b.hit or b.lifetime <= 0 then
-			if not b.hit then
-				--factory.create("/factories#bullet_impact", vmath.vector3(b.position.x, b.position.y, 0.7))
-
-				bullet_impact(b.position.x, b.position.y)
-				b.hit = true
+		-- Mark for removal
+		if bullet.hit or bullet.lifetime <= 0 then
+			if not bullet.hit then
+				bullet_impact(bullet.position.x, bullet.position.y, bullet.type.IMPACT)
+				bullet.hit = true
 			end
 			table.insert(to_remove, i)
 		end
 	end
 
 	-- Remove bullets
-	for i = #to_remove, 1, -1 do
-		local idx = to_remove[i]
-		local b = bullets[idx]
+	for i, v in ipairs(to_remove) do
+		local bullet = bullet_list[v]
 
 		-- Clean up
-		delete_trail_segments(b)
-		collision.remove(b.aabb_id)
-		go.delete(b.id)
-		table.remove(bullets, idx)
+		delete_trail_segments(bullet)
+		collision.remove(bullet.aabb_id)
+		go.delete(bullet.id)
+		table.remove(bullet_list, v)
+		to_remove[i] = nil
 	end
 end
 
-function bullet.clear()
-	for i, b in ipairs(bullets) do
-		collision.remove(b.aabb_id)
-		go.delete(b.id)
-		delete_trail_segments(b)
+--[[function bullets.clear()
+	for _, bullet in ipairs(bullet_list) do
+		collision.remove(bullet.aabb_id)
+		go.delete(bullet.id)
+		delete_trail_segments(bullet)
 	end
-	bullets = {}
-end
+	bullet_list = {}
+end]]
 
-return bullet
+return bullets

@@ -38,4 +38,27 @@ animations {
   }
   fps: 24
 }
+
+animations {
+  id: "bullet_enemy_impact"
+  images {
+    image: "/assets/impact_red_1.png"
+  }
+  images {
+    image: "/assets/impact_red_2.png"
+  }
+  images {
+    image: "/assets/impact_red_3.png"
+  }
+  images {
+    image: "/assets/impact_red_4.png"
+  }
+  images {
+    image: "/assets/impact_red_5.png"
+  }
+  images {
+    image: "/assets/blank.png"
+  }
+  fps: 24
+}
 extrude_borders: 2

@@ -20,4 +20,25 @@ const.TRIGGER = {
 	TOUCH = hash("touch")
 }
 
+const.PLAYER = {
+	BULLETS = {
+		SINGLE = {
+			PROJECTILE = hash("projectile"),
+			IMPACT = hash("bullet_impact"),
+		}
+	}
+
+}
+
+
+const.ENEMY = {
+	BULLETS = {
+		SINGLE = {
+			PROJECTILE = hash("projectile_enemy"),
+			IMPACT = hash("bullet_enemy_impact"),
+		}
+	}
+
+}
+
 return const
