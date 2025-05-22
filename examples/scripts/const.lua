@@ -24,7 +24,7 @@ const.PLAYER = {
 	BULLETS = {
 		SINGLE = {
 			PROJECTILE = hash("projectile"),
-			IMPACT = hash("bullet_impact"),
+			IMPACT     = hash("bullet_impact"),
 		}
 	}
 
@@ -35,24 +35,31 @@ const.ENEMY = {
 	BULLETS = {
 		SINGLE = {
 			PROJECTILE = hash("projectile_enemy"),
-			IMPACT = hash("bullet_enemy_impact"),
+			IMPACT     = hash("bullet_enemy_impact"),
 		}
 	},
-	FIRE_COOLDOWN = 2.0
+	FIRE_COOLDOWN = 1.3,
+	VISION_STATUS = {
+		IDLE    = hash("enemy_status_idle"),
+		WARNING = hash("enemy_status_warning"),
+		DANGER  = hash("enemy_status_danger"),
+	}
 
 }
 
 
 const.VISION = {
-	STATE = {
-		IDLE = 1,          -- Normal patrol
-		WARNING = 2,       -- Saw something, investigating
-		ALERT = 3,         -- Target confirmed, attacking
+	STATE                           = {
+		IDLE    = 1,                    -- Normal patrol
+		WARNING = 2,                    -- Saw something, investigating
+		ALERT   = 3,                    -- Target confirmed, attacking
 	},
-	FOV = 90,              -- Field of view in degrees
-	DISTANCE = 150,        -- How far enemies can see
-	PERIPHERAL_DISTANCE = 10, -- Distance for peripheral vision (outside the cone)
-	CHECK_FREQUENCY = 0.1
+	FOV                             = 90, -- Field of view in degrees
+	DISTANCE                        = 150, -- How far enemies can see
+	PERIPHERAL_DISTANCE             = 10, -- Distance for peripheral vision (outside the cone)
+	CHECK_FREQUENCY                 = 0.1,
+	PERIPHERAL_DETECTION_SPEED      = 1.0,
+	SLOW_PERIPHERAL_DETECTION_SPEED = 0.4
 }
 
 return const

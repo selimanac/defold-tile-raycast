@@ -17,7 +17,13 @@ images {
   image: "/assets/projectile_enemy.png"
 }
 images {
-  image: "/assets/warning.png"
+  image: "/assets/enemy_status_warning.png"
+}
+images {
+  image: "/assets/enemy_status_idle.png"
+}
+images {
+  image: "/assets/enemy_status_danger.png"
 }
 animations {
   id: "bullet_impact"

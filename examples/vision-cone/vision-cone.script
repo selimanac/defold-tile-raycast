@@ -10,8 +10,8 @@ local game_camera = require("examples.scripts.game_camera")
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	profiler.enable_ui(true)
-	profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
+	--profiler.enable_ui(true)
+	--profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
 	collision.init()
 	game_camera.init()
 

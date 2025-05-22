@@ -11,7 +11,7 @@ local input = vmath.vector3()
 local direction = vmath.vector3()
 local acceleration = 120
 local max_speed = 50
-local friction = 0.5 -- Added friction for smoother movement
+local friction = 0.7 -- Added friction for smoother movement
 local ray_intersection = vmath.vector3()
 
 

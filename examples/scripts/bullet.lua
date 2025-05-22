@@ -4,7 +4,7 @@ local collision = require("examples.scripts.collision")
 
 local bullets = {}
 
-local BULLET_SPEED = 60
+local BULLET_SPEED = 160
 local BULLET_LIFETIME = 5
 local BULLET_SIZE = 4
 
@@ -102,7 +102,7 @@ function bullets.add(start_pos, aim_pos, collision_bit, bullet_type, hit_callbac
 	-- Add collision for bullet
 	local aabb_id = collision.insert_gameobject(msg.url(bullet_id), BULLET_SIZE, BULLET_SIZE, const.COLLISION_BITS.BULLET)
 
-	pprint(hit_callback)
+
 	-- Store bullet data
 	table.insert(bullet_list, {
 		id = bullet_id,
@@ -179,20 +179,25 @@ function bullets.update(dt)
 				bullet_impact(bullet.position.x, bullet.position.y, bullet.type.IMPACT)
 				bullet.hit = true
 			end
-			table.insert(to_remove, i)
+			table.insert(to_remove, bullet)
 		end
 	end
 
 	-- Remove bullets
-	for i, v in ipairs(to_remove) do
-		local bullet = bullet_list[v]
-
+	-- Then when removing:
+	for i, bullet in ipairs(to_remove) do
 		-- Clean up
 		delete_trail_segments(bullet)
 		collision.remove(bullet.aabb_id)
 		go.delete(bullet.id)
-		table.remove(bullet_list, v)
-		to_remove[i] = nil
+
+		-- Find and remove from bullet_list
+		for j, list_bullet in ipairs(bullet_list) do
+			if list_bullet == bullet then
+				table.remove(bullet_list, j)
+				break
+			end
+		end
 	end
 end
 

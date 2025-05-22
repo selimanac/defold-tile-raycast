@@ -1,11 +1,11 @@
 name: "line-of-sight"
 instances {
   id: "camera"
-  prototype: "/components/camera.go"
+  prototype: "/components/gameobjects/camera.go"
 }
 instances {
   id: "cursor"
-  prototype: "/components/cursor.go"
+  prototype: "/components/gameobjects/cursor.go"
 }
 scale_along_z: 0
 embedded_instances {
@@ -28,23 +28,27 @@ embedded_instances {
   id: "factories"
   data: "components {\n"
   "  id: \"bullet\"\n"
-  "  component: \"/components/bullet.factory\"\n"
+  "  component: \"/components/factories/bullet.factory\"\n"
   "}\n"
   "components {\n"
   "  id: \"enemy\"\n"
-  "  component: \"/components/enemy.factory\"\n"
+  "  component: \"/components/factories/enemy.factory\"\n"
   "}\n"
   "components {\n"
   "  id: \"hero\"\n"
-  "  component: \"/components/hero.factory\"\n"
+  "  component: \"/components/factories/hero.factory\"\n"
   "}\n"
   "components {\n"
   "  id: \"bullet_impact\"\n"
-  "  component: \"/components/bullet_impact.factory\"\n"
+  "  component: \"/components/factories/bullet_impact.factory\"\n"
   "}\n"
   "components {\n"
   "  id: \"bullet_enemy\"\n"
-  "  component: \"/components/bullet_enemy.factory\"\n"
+  "  component: \"/components/factories/bullet_enemy.factory\"\n"
+  "}\n"
+  "components {\n"
+  "  id: \"status_indicator\"\n"
+  "  component: \"/components/factories/status_indicator.factory\"\n"
   "}\n"
   ""
 }

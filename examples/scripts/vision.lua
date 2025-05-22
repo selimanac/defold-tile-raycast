@@ -20,6 +20,7 @@ function vision.add_to_entity(entity, params)
         peripheral_distance = params.peripheral_distance or const.VISION.PERIPHERAL_DISTANCE,
         facing_angle = params.facing_angle or 0,
         state = const.VISION.STATE.IDLE,
+
         timer = 0,
         last_seen_position = nil,
         alert_level = 0,      -- 0-100, increases when seeing target
@@ -68,9 +69,9 @@ function vision.update(dt)
                             enemy.vision.last_seen_position = vmath.vector3(data.player.position)
 
                             -- Increase alert level based on distance and whether in direct FOV
-                            local detection_speed = 1.0
+                            local detection_speed = const.VISION.PERIPHERAL_DETECTION_SPEED
                             if is_in_peripheral and not is_in_fov then
-                                detection_speed = 0.3 -- Slower detection in peripheral vision
+                                detection_speed = const.VISION.SLOW_PERIPHERAL_DETECTION_SPEED -- Slower detection in peripheral vision
                             end
 
                             -- Distance factor - closer means faster detection
