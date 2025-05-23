@@ -1,0 +1,54 @@
+name: "line-of-sight"
+instances {
+  id: "camera"
+  prototype: "/components/gameobjects/camera.go"
+}
+instances {
+  id: "cursor"
+  prototype: "/components/gameobjects/cursor.go"
+}
+scale_along_z: 0
+embedded_instances {
+  id: "tilemap"
+  data: "components {\n"
+  "  id: \"line-of-sight\"\n"
+  "  component: \"/examples/vision-cone/vision-cone.tilemap\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "script"
+  data: "components {\n"
+  "  id: \"vision-cone\"\n"
+  "  component: \"/examples/vision-cone/vision-cone.script\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "factories"
+  data: "components {\n"
+  "  id: \"bullet\"\n"
+  "  component: \"/components/factories/bullet.factory\"\n"
+  "}\n"
+  "components {\n"
+  "  id: \"enemy\"\n"
+  "  component: \"/components/factories/enemy.factory\"\n"
+  "}\n"
+  "components {\n"
+  "  id: \"hero\"\n"
+  "  component: \"/components/factories/hero.factory\"\n"
+  "}\n"
+  "components {\n"
+  "  id: \"bullet_impact\"\n"
+  "  component: \"/components/factories/bullet_impact.factory\"\n"
+  "}\n"
+  "components {\n"
+  "  id: \"bullet_enemy\"\n"
+  "  component: \"/components/factories/bullet_enemy.factory\"\n"
+  "}\n"
+  "components {\n"
+  "  id: \"status_indicator\"\n"
+  "  component: \"/components/factories/status_indicator.factory\"\n"
+  "}\n"
+  ""
+}

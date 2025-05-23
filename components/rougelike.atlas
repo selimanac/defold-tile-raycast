@@ -1,0 +1,72 @@
+images {
+  image: "/assets/cursor.png"
+}
+images {
+  image: "/assets/kenney_micro-roguelike/Tiles/Colored/hero.png"
+}
+images {
+  image: "/assets/kenney_micro-roguelike/Tiles/Colored/enemy_1.png"
+}
+images {
+  image: "/assets/kenney_micro-roguelike/Tiles/Colored/enemy_2.png"
+}
+images {
+  image: "/assets/projectile.png"
+}
+images {
+  image: "/assets/projectile_enemy.png"
+}
+images {
+  image: "/assets/enemy_status_warning.png"
+}
+images {
+  image: "/assets/enemy_status_idle.png"
+}
+images {
+  image: "/assets/enemy_status_danger.png"
+}
+animations {
+  id: "bullet_impact"
+  images {
+    image: "/assets/impact_1.png"
+  }
+  images {
+    image: "/assets/impact_2.png"
+  }
+  images {
+    image: "/assets/impact_3.png"
+  }
+  images {
+    image: "/assets/impact_4.png"
+  }
+  images {
+    image: "/assets/impact_5.png"
+  }
+  images {
+    image: "/assets/blank.png"
+  }
+  fps: 24
+}
+animations {
+  id: "bullet_enemy_impact"
+  images {
+    image: "/assets/impact_red_1.png"
+  }
+  images {
+    image: "/assets/impact_red_2.png"
+  }
+  images {
+    image: "/assets/impact_red_3.png"
+  }
+  images {
+    image: "/assets/impact_red_4.png"
+  }
+  images {
+    image: "/assets/impact_red_5.png"
+  }
+  images {
+    image: "/assets/blank.png"
+  }
+  fps: 24
+}
+extrude_borders: 2

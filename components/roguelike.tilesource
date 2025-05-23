@@ -1,0 +1,4 @@
+image: "/assets/kenney_micro-roguelike/Tilemap/colored_tilemap_packed.png"
+tile_width: 8
+tile_height: 8
+extrude_borders: 2

@@ -1,0 +1,29 @@
+local cursor      = require("examples.scripts.cursor")
+local hero        = require("examples.scripts.hero")
+local enemy       = require("examples.scripts.enemy")
+local map         = require("examples.scripts.map")
+local bullet      = require("examples.scripts.bullet")
+local game_camera = require("examples.scripts.game_camera")
+local collision   = require("examples.scripts.collision")
+
+function init()
+	msg.post(".", "acquire_input_focus")
+	map.init()
+	game_camera.init()
+end
+
+function update(_, dt)
+	hero.update(dt)
+	enemy.vision_update(dt)
+	bullet.update(dt)
+end
+
+function on_input(_, action_id, action)
+	cursor.input(action)
+	hero.input(action_id, action)
+end
+
+function final()
+	tile_raycast.reset()
+	collision.reset()
+end
