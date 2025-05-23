@@ -65,7 +65,7 @@ function hero.update(dt)
 	go.set_position(data.player.position, data.player.id)
 
 	--[[	
-	-- ray wall hit
+	-- Just for debug: ray wall hit
 	local ray_intersection = vmath.vector3()
 	local hit, _, _, _, _, intersection_x, intersection_y, _ = tile_raycast.cast(data.player.position.x, data.player.position.y, data.mouse_position.x, data.mouse_position.y)
 

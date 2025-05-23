@@ -20,7 +20,7 @@ function vision.add_to_entity(entity, params)
         last_seen_position  = nil,
         alert_level         = 0,   -- 0-100, increases when seeing target
         detection_time      = 0.5, -- Time needed to fully detect a target
-        suspicion_timeout   = 5    -- How long to stay suspicious
+        warning_timeout     = 5    -- How long to stay warning
     }
 end
 

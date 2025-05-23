@@ -136,7 +136,7 @@ function enemies.vision_update(dt)
 		end
 
 		if enemy.vision.state == const.VISION.STATE.IDLE then
-			-- TODO: Patrol behavior
+			-- TODO: Patrol behavior, walk, seek
 			update_idle_looking_behavior(enemy, dt)
 		elseif enemy.vision.state == const.VISION.STATE.WARNING then
 			if enemy.vision.last_seen_position then

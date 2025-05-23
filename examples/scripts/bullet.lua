@@ -143,7 +143,8 @@ function bullets.update(dt)
 				-- Update position
 				bullet.position = new_pos
 
-				--	collision.update_aabb(b.aabb_id, b.position.x, b.position.y, BULLET_SIZE, BULLET_SIZE)
+				--	We don't need to be precise here, but if you want to:
+				-- collision.update_aabb(b.aabb_id, b.position.x, b.position.y, BULLET_SIZE, BULLET_SIZE)
 
 				-- Check collisions
 				local results, count = collision.query_id(bullet.aabb_id, bullet.collision_bit, true)

@@ -26,16 +26,15 @@ namespace dda
     Side                m_Side;
     Vec2                m_Intersection;
 
-    inline float        Distance(const Vec2* v1, const Vec2* v2)
+    // Only for m_Intersection
+    inline float Distance(const Vec2* v1, const Vec2* v2)
     {
         float dx = v2->x - v1->x;
         float dy = v2->y - v1->y;
         return sqrtf(dx * dx + dy * dy);
-        // return sqrt(pow((v2->x - v1->x), 2) + pow((v2->y - v1->y), 2));
-        // return sqrt((v2->x - v1->x) * (v2->x - v1->x) + (v2->y - v1->y) * (v2->y - v1->y));
+        // return sqrt(pow((v2->x - v1->x), 2) + pow((v2->y - v1->y), 2)); //<- no need for pow
     }
 
-    // Not using this
     inline float DistanceSquared(const Vec2* v1, const Vec2* v2)
     {
         return (v2->x - v1->x) * (v2->x - v1->x) + (v2->y - v1->y) * (v2->y - v1->y);
@@ -122,14 +121,14 @@ namespace dda
 
         // Reset values
         m_TileFound = false;
-        m_MaxDistance = Distance(ray_start, ray_end);
+        m_MaxDistance = DistanceSquared(ray_start, ray_end); // Squared distance
         m_Distance = 0.0f;
         m_Tile = 0;
         m_TileX = 0;
         m_TileY = 0;
         m_Side = Side::LEFT;
 
-        while (!m_TileFound && m_Distance < m_MaxDistance)
+        while (!m_TileFound)
         {
             if (m_RayLength1D.x < m_RayLength1D.y)
             {
@@ -169,14 +168,21 @@ namespace dda
                     m_TileFound = true;
                 }
             }
+
+            float ix = ray_start->x + m_RayNormalDirection.x * m_Distance;
+            float iy = ray_start->y + m_RayNormalDirection.y * m_Distance;
+            float distanceSq = (ix - ray_start->x) * (ix - ray_start->x) + (iy - ray_start->y) * (iy - ray_start->y);
+            if (distanceSq > m_MaxDistance)
+                break;
         } // End While
 
         ray_result->m_TileFound = m_TileFound;
+
         if (m_TileFound)
         {
+            m_MaxDistance = Distance(ray_start, ray_end); // Squared distance
             ray_result->m_Intersection.x = ray_start->x + m_RayNormalDirection.x * m_Distance;
             ray_result->m_Intersection.y = ray_start->y + m_RayNormalDirection.y * m_Distance;
-
             ray_result->m_TileX = m_TileX + 1;
             ray_result->m_TileY = m_TileY + 1;
             ray_result->m_ArrayId = m_Tile + 1;
