@@ -1,14 +1,11 @@
-#include "dmsdk/script/script.h"
-#include <cstdint>
 #define LIB_NAME "TileRaycast"
 #define MODULE_NAME "tile_raycast"
 
 #include <dmsdk/sdk.h>
 #include <dda.h>
+#include <cstdint>
 
-dda::RayResult m_RayResult;
-
-static int     RaycastReset(lua_State* L)
+static int RaycastReset(lua_State* L)
 {
     dda::Reset();
     return 0;
@@ -79,6 +76,7 @@ static int RaycastResult(lua_State* L)
     ray_end.x = luaL_checkinteger(L, 3);
     ray_end.y = luaL_checkinteger(L, 4);
 
+    dda::RayResult m_RayResult;
     dda::RayCast(&ray_start, &ray_end, &m_RayResult);
 
     int lua_position = 1;

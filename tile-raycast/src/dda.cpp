@@ -6,7 +6,6 @@
 
 namespace dda
 {
-
     dmArray<uint16_t>   m_Tilemap;
     dmHashTable16<bool> m_TargetTiles;
     Settings            m_Settings;
@@ -33,9 +32,10 @@ namespace dda
         float dy = v2->y - v1->y;
         return sqrtf(dx * dx + dy * dy);
         // return sqrt(pow((v2->x - v1->x), 2) + pow((v2->y - v1->y), 2));
-        //  return sqrt((v2->x - v1->x) * (v2->x - v1->x) + (v2->y - v1->y) * (v2->y - v1->y));
+        // return sqrt((v2->x - v1->x) * (v2->x - v1->x) + (v2->y - v1->y) * (v2->y - v1->y));
     }
 
+    // Not using this
     inline float DistanceSquared(const Vec2* v1, const Vec2* v2)
     {
         return (v2->x - v1->x) * (v2->x - v1->x) + (v2->y - v1->y) * (v2->y - v1->y);
@@ -70,7 +70,6 @@ namespace dda
         memcpy(m_Tilemap.Begin(), tile_map->Begin(), tile_map->Size() * sizeof(uint16_t));
 
         // Copy Target Tiles
-
         m_TargetTiles.SetCapacity(target_tiles->Capacity());
 
         for (int i = 0; i < target_tiles->Size(); ++i)
@@ -78,6 +77,7 @@ namespace dda
             m_TargetTiles.Put((*target_tiles)[i], true);
         }
     }
+
     void RayCast(const dda::Vec2* ray_start, const dda::Vec2* ray_end, RayResult* ray_result)
     {
         m_RayDirection.x = ray_end->x - ray_start->x;
