@@ -2,6 +2,7 @@ local data = require("examples.scripts.data")
 local const = require("examples.scripts.const")
 local collision = require("examples.scripts.collision")
 
+-- Module
 local bullets = {}
 
 local BULLET_SPEED = 160
@@ -19,7 +20,7 @@ local function create_trail_segments(position, bullet_type)
 	local trail_segments = {}
 
 	for i = 1, TRAIL_SEGMENTS do
-		local trail_id = factory.create("/factories#bullet", position)
+		local trail_id = factory.create(const.FACTORY.BULLET, position)
 
 		go.set_position(position, trail_id)
 		go.set_scale(0.8, trail_id)
@@ -33,7 +34,7 @@ local function create_trail_segments(position, bullet_type)
 			id = trail_id,
 			sprite_url = trail_sprite,
 			active = false,
-			position = vmath.vector3(position)
+			position = position
 
 		})
 	end
@@ -44,7 +45,7 @@ end
 local function activate_trail_segment(bullet)
 	local segment = bullet.trail_segments[bullet.trail_index]
 	segment.active = true
-	segment.position = vmath.vector3(bullet.position)
+	segment.position = bullet.position
 
 	go.set_position(segment.position, segment.id)
 
@@ -60,7 +61,6 @@ local function activate_trail_segment(bullet)
 	bullet.trail_index = bullet.trail_index % TRAIL_SEGMENTS + 1
 end
 
-
 local function update_trail(bullet, dt)
 	bullet.trail_timer = bullet.trail_timer + dt
 	if bullet.trail_timer >= TRAIL_SPACING then
@@ -69,7 +69,6 @@ local function update_trail(bullet, dt)
 	end
 end
 
-
 local function delete_trail_segments(bullet)
 	for _, segment in ipairs(bullet.trail_segments) do
 		go.delete(segment.id)
@@ -77,7 +76,7 @@ local function delete_trail_segments(bullet)
 end
 
 local function bullet_impact(pos_x, pos_y, impact_type)
-	local impact_id = factory.create("/factories#bullet_impact", vmath.vector3(pos_x, pos_y, 0.7))
+	local impact_id = factory.create(const.FACTORY.BULLET_IMPACT, vmath.vector3(pos_x, pos_y, 0.7))
 
 	local impact_sprite = msg.url(impact_id)
 	impact_sprite.fragment = "sprite"
@@ -89,41 +88,39 @@ local function bullet_impact(pos_x, pos_y, impact_type)
 end
 
 function bullets.add(start_pos, aim_pos, collision_bit, bullet_type, hit_callback)
+	local bullet_position  = vmath.vector3(start_pos.x, start_pos.y, 0.6)
+	local bullet_id        = factory.create(const.FACTORY.BULLET, bullet_position)
 	local bullet_direction = vmath.normalize(aim_pos - start_pos)
-	bullet_direction.z = 0
+	bullet_direction.z     = 0
 
-	local bullet_position = vmath.vector3(start_pos.x, start_pos.y, 0.6)
-	local bullet_id = factory.create("/factories#bullet", bullet_position)
-
-	local bullet_sprite = msg.url(bullet_id)
+	local bullet_sprite    = msg.url(bullet_id)
 	bullet_sprite.fragment = "sprite"
 	sprite.play_flipbook(bullet_sprite, bullet_type.PROJECTILE)
 
 	-- Add collision for bullet
 	local aabb_id = collision.insert_gameobject(msg.url(bullet_id), BULLET_SIZE, BULLET_SIZE, const.COLLISION_BITS.BULLET)
 
-
-	-- Store bullet data
+	--  bullet data
 	table.insert(bullet_list, {
-		id = bullet_id,
-		aabb_id = aabb_id,
-		position = bullet_position,
-		direction = bullet_direction,
-		lifetime = BULLET_LIFETIME,
-		hit = false,
-		collision_bit = collision_bit,
-		trail_timer = 0,
+		id             = bullet_id,
+		aabb_id        = aabb_id,
+		position       = bullet_position,
+		direction      = bullet_direction,
+		lifetime       = BULLET_LIFETIME,
+		hit            = false,
+		collision_bit  = collision_bit,
+		trail_timer    = 0,
 		trail_segments = create_trail_segments(bullet_position, bullet_type.PROJECTILE),
-		trail_index = 1,
-		type = bullet_type,
-		hit_callback = hit_callback
+		trail_index    = 1,
+		type           = bullet_type,
+		hit_callback   = hit_callback
 	})
 end
 
 function bullets.update(dt)
 	to_remove = {}
 
-	for i, bullet in ipairs(bullet_list) do
+	for _, bullet in ipairs(bullet_list) do
 		if not bullet.hit then
 			bullet.lifetime = bullet.lifetime - dt
 
@@ -137,7 +134,6 @@ function bullets.update(dt)
 
 			if hit then
 				-- Bullet hit wall
-
 				bullet.position.x = hit_x
 				bullet.position.y = hit_y
 				bullet.hit = true
@@ -147,18 +143,16 @@ function bullets.update(dt)
 				-- Update position
 				bullet.position = new_pos
 
-				-- Check collisions
-				--		collision.update_aabb(b.aabb_id, b.position.x, b.position.y, BULLET_SIZE, BULLET_SIZE)
+				--	collision.update_aabb(b.aabb_id, b.position.x, b.position.y, BULLET_SIZE, BULLET_SIZE)
 
+				-- Check collisions
 				local results, count = collision.query_id(bullet.aabb_id, bullet.collision_bit, true)
 				if results then
 					for j = 1, count do
 						local enemy_id = data.enemy_aabb_ids[results[j].id]
 						if enemy_id then
 							data.enemies[enemy_id].hit_callback(enemy_id)
-						end
-
-						if data.player.aabb_id == results[j].id then
+						elseif data.player.aabb_id == results[j].id then
 							data.player.hit_callback(r)
 						end
 
@@ -169,7 +163,7 @@ function bullets.update(dt)
 				end
 			end
 
-			-- Update bullet visual position
+			-- update position
 			go.set_position(bullet.position, bullet.id)
 		end
 
@@ -184,8 +178,7 @@ function bullets.update(dt)
 	end
 
 	-- Remove bullets
-	-- Then when removing:
-	for i, bullet in ipairs(to_remove) do
+	for _, bullet in ipairs(to_remove) do
 		-- Clean up
 		delete_trail_segments(bullet)
 		collision.remove(bullet.aabb_id)

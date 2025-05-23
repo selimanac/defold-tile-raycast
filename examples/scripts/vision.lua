@@ -1,49 +1,42 @@
 local data   = require("examples.scripts.data")
 local const  = require("examples.scripts.const")
 local debug  = require("examples.scripts.debug")
+local utils  = require("examples.scripts.utils")
 
+-- Module
 local vision = {}
 
-local function is_angle_in_fov(angle, facing_angle, fov)
-    local diff = math.abs((angle - facing_angle + 180) % 360 - 180)
-    return diff <= fov / 2
-end
-
--- Add vision component to an entity
 function vision.add_to_entity(entity, params)
     params = params or {}
 
-    -- Create vision data
+    -- Create vision
     entity.vision = {
-        fov = params.fov or const.VISION.FOV,
-        distance = params.distance or const.VISION.DISTANCE,
+        fov                 = params.fov or const.VISION.FOV,
+        distance            = params.distance or const.VISION.DISTANCE,
         peripheral_distance = params.peripheral_distance or const.VISION.PERIPHERAL_DISTANCE,
-        facing_angle = params.facing_angle or 0,
-        state = const.VISION.STATE.IDLE,
-
-        timer = 0,
-        last_seen_position = nil,
-        alert_level = 0,      -- 0-100, increases when seeing target
-        detection_time = 0.5, -- Time needed to fully detect a target
-        suspicion_timeout = 5 -- How long to stay suspicious
+        facing_angle        = params.facing_angle or 0,
+        state               = const.VISION.STATE.IDLE,
+        timer               = 0,   -- Check frequency timer
+        last_seen_position  = nil,
+        alert_level         = 0,   -- 0-100, increases when seeing target
+        detection_time      = 0.5, -- Time needed to fully detect a target
+        suspicion_timeout   = 5    -- How long to stay suspicious
     }
-
-    return entity.vision
 end
 
 -- Update the vision system for all entities
 function vision.update(dt)
-    for i, enemy in ipairs(data.enemies) do
+    for _, enemy in ipairs(data.enemies) do
         if enemy.vision then
-            -- Only check vision periodically to save performance
+            -- Check vision periodically
             enemy.vision.timer = enemy.vision.timer + dt
 
             if enemy.vision.timer >= const.VISION.CHECK_FREQUENCY then
                 enemy.vision.timer = 0
 
-                -- Calculate facing direction based on angle
-                local facing_rad = math.rad(enemy.vision.facing_angle)
-                local facing_dir = vmath.vector3(math.cos(facing_rad), math.sin(facing_rad), 0)
+                -- If you need to: Calculate facing direction based on angle
+                --  local facing_rad = math.rad(enemy.vision.facing_angle)
+                --  local facing_dir = vmath.vector3(math.cos(facing_rad), math.sin(facing_rad), 0)
 
                 -- Check if player is in vision cone
                 local to_player = data.player.position - enemy.position
@@ -51,10 +44,10 @@ function vision.update(dt)
 
                 if distance_to_player <= enemy.vision.distance then
                     -- Calculate angle to player
-                    local angle_to_player = math.deg(math.atan2(to_player.y, to_player.x))
+                    local angle_to_player = utils.angle(to_player)
 
                     -- Check if angle is within FOV
-                    local is_in_fov = is_angle_in_fov(angle_to_player, enemy.vision.facing_angle, enemy.vision.fov)
+                    local is_in_fov = utils.is_angle_in_fov(angle_to_player, enemy.vision.facing_angle, enemy.vision.fov)
                     local is_in_peripheral = distance_to_player <= enemy.vision.peripheral_distance
 
                     if is_in_fov or is_in_peripheral then
@@ -65,7 +58,7 @@ function vision.update(dt)
                         )
 
                         if not hit then
-                            -- Clear line of sight to player!
+                            -- Clear line of sight to player
                             enemy.vision.last_seen_position = vmath.vector3(data.player.position)
 
                             -- Increase alert level based on distance and whether in direct FOV
@@ -92,10 +85,9 @@ function vision.update(dt)
                     end
                 end
 
-                -- If target not seen, gradually decrease alert level
+                -- If target not seen, decrease alert level
                 if not enemy.vision.last_seen_position or
                     vmath.length(enemy.vision.last_seen_position - data.player.position) > 5 then
-                    -- Decrease alert level
                     if enemy.vision.state == const.VISION.STATE.WARNING then
                         enemy.vision.alert_level = math.max(0, enemy.vision.alert_level - 15 * const.VISION.CHECK_FREQUENCY)
                     elseif enemy.vision.state == const.VISION.STATE.ALERT then
@@ -119,14 +111,14 @@ function vision.update(dt)
     end
 end
 
--- Set facing direction (in degrees, 0 = right, 90 = up)
+-- Set facing direction
 function vision.set_facing(entity, angle)
     if entity.vision then
         entity.vision.facing_angle = angle
     end
 end
 
--- Directly set vision state (for triggering alerts from other sources)
+--  set vision state
 function vision.set_state(entity, state)
     if entity.vision then
         entity.vision.state = state
@@ -140,7 +132,7 @@ function vision.set_state(entity, state)
     end
 end
 
--- Set last seen position (for scripted situations)
+-- Set last seen position
 function vision.set_last_seen_position(entity, position)
     if entity.vision then
         entity.vision.last_seen_position = vmath.vector3(position)

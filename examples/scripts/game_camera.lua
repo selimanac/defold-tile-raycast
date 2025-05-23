@@ -1,7 +1,7 @@
-local data        = require("examples.scripts.data")
 local const       = require("examples.scripts.const")
 
 local game_camera = {}
+
 local zoom        = 0
 local window_size = {
 	width = 0,
@@ -11,7 +11,7 @@ local window_size = {
 function game_camera.set_zoom(size)
 	local new_camera_zoom = math.max(size.width / const.DISPLAY_WIDTH, size.height / const.DISPLAY_HEIGHT) * zoom / window.get_display_scale()
 
-	go.set("/camera#camera", "orthographic_zoom", new_camera_zoom)
+	go.set(const.CAMERA, "orthographic_zoom", new_camera_zoom)
 end
 
 local function window_event(_, event, size)
@@ -21,12 +21,9 @@ local function window_event(_, event, size)
 end
 
 function game_camera.init()
-	zoom = go.get("/camera#camera", "orthographic_zoom")
+	zoom = go.get(const.CAMERA, "orthographic_zoom")
 
-	local w, h = window.get_size()
-
-	window_size.width = w
-	window_size.height = h
+	window_size.width, window_size.height = window.get_size()
 
 	game_camera.set_zoom(window_size)
 

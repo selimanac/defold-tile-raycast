@@ -4,6 +4,17 @@ const.DISPLAY_WIDTH = sys.get_config_int("display.width")
 const.DISPLAY_HEIGHT = sys.get_config_int("display.height")
 const.TILE_SIZE = 8
 
+const.FACTORY = {
+	BULLET = "/factories#bullet",
+	BULLET_IMPACT = "/factories#bullet_impact",
+	ENEMY = "/factories#enemy",
+	ENEMY_STATUS_INDICATOR = "/factories#status_indicator",
+	HERO = "/factories#hero"
+}
+
+const.CAMERA = "/camera#camera"
+const.CURSOR = "/cursor"
+
 const.COLLISION_BITS = {
 	PLAYER = 1,
 	ENEMY  = 2,
@@ -20,16 +31,18 @@ const.TRIGGER = {
 	TOUCH = hash("touch")
 }
 
-const.PLAYER = {
+const.HERO = {
 	BULLETS = {
 		SINGLE = {
 			PROJECTILE = hash("projectile"),
 			IMPACT     = hash("bullet_impact"),
 		}
-	}
+	},
+	ACCELERATION = 200,
+	MAX_SPEED = 50,
+	FRICTION = 0.7,
 
 }
-
 
 const.ENEMY = {
 	BULLETS = {
@@ -47,16 +60,16 @@ const.ENEMY = {
 
 }
 
-
+-- Defaults for Vision
 const.VISION = {
 	STATE                           = {
-		IDLE    = 1,                    -- Normal patrol
-		WARNING = 2,                    -- Saw something, investigating
-		ALERT   = 3,                    -- Target confirmed, attacking
+		IDLE    = 1,
+		WARNING = 2,
+		ALERT   = 3,
 	},
-	FOV                             = 90, -- Field of view in degrees
-	DISTANCE                        = 150, -- How far enemies can see
-	PERIPHERAL_DISTANCE             = 10, -- Distance for peripheral vision (outside the cone)
+	FOV                             = 90,
+	DISTANCE                        = 150,
+	PERIPHERAL_DISTANCE             = 10,
 	CHECK_FREQUENCY                 = 0.1,
 	PERIPHERAL_DETECTION_SPEED      = 1.0,
 	SLOW_PERIPHERAL_DETECTION_SPEED = 0.4
