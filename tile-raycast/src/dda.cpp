@@ -180,7 +180,7 @@ namespace dda
 
         if (m_TileFound)
         {
-            m_MaxDistance = Distance(ray_start, ray_end); // Squared distance
+            m_MaxDistance = Distance(ray_start, ray_end);
             ray_result->m_Intersection.x = ray_start->x + m_RayNormalDirection.x * m_Distance;
             ray_result->m_Intersection.y = ray_start->y + m_RayNormalDirection.y * m_Distance;
             ray_result->m_TileX = m_TileX + 1;

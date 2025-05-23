@@ -14,12 +14,18 @@ You can use Tiled Raycast in your own project by adding this project as a [Defol
 https://github.com/selimanac/defold-tile-raycast/archive/refs/heads/master.zip
 
 
-# Example
+# Examples
 
 You can find vision cone and line of sight examples in this project.  
 
 For v1: https://github.com/selimanac/defold-tile-raycast-platformer  
 
+# Release Notes
+## v2
+- **BREAKING:** Module name has been changed to `tile_raycast`
+- Complete code refactoring
+- Minimal performance improvements
+- New visual cone and line of sight examples
 
 # Use Cases(AI Generated)
 
