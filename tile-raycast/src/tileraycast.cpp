@@ -69,12 +69,12 @@ static int RaycastResult(lua_State* L)
     }
 
     dda::Vec2 ray_start;
-    ray_start.x = luaL_checkinteger(L, 1);
-    ray_start.y = luaL_checkinteger(L, 2);
+    ray_start.x = luaL_checknumber(L, 1);
+    ray_start.y = luaL_checknumber(L, 2);
 
     dda::Vec2 ray_end;
-    ray_end.x = luaL_checkinteger(L, 3);
-    ray_end.y = luaL_checkinteger(L, 4);
+    ray_end.x = luaL_checknumber(L, 3);
+    ray_end.y = luaL_checknumber(L, 4);
 
     dda::RayResult m_RayResult;
     dda::RayCast(&ray_start, &ray_end, &m_RayResult);

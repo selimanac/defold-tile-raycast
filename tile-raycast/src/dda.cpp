@@ -6,6 +6,22 @@
 
 namespace dda
 {
+    typedef struct Settings
+    {
+        uint16_t m_TileWidth;
+        uint16_t m_TileHeight;
+        uint16_t m_Width;
+        uint16_t m_Height;
+        uint16_t m_MaxX;
+        uint16_t m_MaxY;
+    } Settings;
+
+    typedef struct Vec2Int
+    {
+        int x;
+        int y;
+    } Vec2Int;
+
     dmArray<uint16_t>   m_Tilemap;
     dmHashTable16<bool> m_TargetTiles;
     Settings            m_Settings;
@@ -25,6 +41,16 @@ namespace dda
     uint16_t            m_TileY;
     Side                m_Side;
     Vec2                m_Intersection;
+
+    inline uint32_t     GetTileIndex(uint16_t x, uint16_t y)
+    {
+        return y * m_Settings.m_Width + x;
+    }
+
+    inline bool BoundCheck(uint16_t tile_x, uint16_t tile_y)
+    {
+        return tile_x < m_Settings.m_Width && tile_y < m_Settings.m_Height;
+    }
 
     // Only for m_Intersection
     inline float Distance(const Vec2* v1, const Vec2* v2)
@@ -62,6 +88,9 @@ namespace dda
         m_Settings.m_TileHeight = tile_height;
         m_Settings.m_Width = map_width;
         m_Settings.m_Height = map_height;
+
+        m_Settings.m_MaxX = m_Settings.m_Width * m_Settings.m_TileWidth;
+        m_Settings.m_MaxY = m_Settings.m_Height * m_Settings.m_TileHeight;
 
         // Copy Map
         m_Tilemap.SetCapacity(tile_map->Size());
@@ -154,13 +183,13 @@ namespace dda
             }
 
             // Bound check
-            if (m_MapCheck.x >= 0 && m_MapCheck.x < (m_Settings.m_Width * m_Settings.m_TileWidth) &&
-                m_MapCheck.y >= 0 && m_MapCheck.y < (m_Settings.m_Height * m_Settings.m_TileHeight))
+            if (m_MapCheck.x >= 0 && m_MapCheck.x < m_Settings.m_MaxX &&
+                m_MapCheck.y >= 0 && m_MapCheck.y < m_Settings.m_MaxY)
             {
                 m_TileX = m_MapCheck.x / m_Settings.m_TileWidth;
                 m_TileY = m_MapCheck.y / m_Settings.m_TileHeight;
 
-                m_Tile = m_TileY * m_Settings.m_Width + m_TileX;
+                m_Tile = GetTileIndex(m_TileX, m_TileY);
 
                 if (m_TargetTiles.Get(m_Tilemap[m_Tile]))
                 {
@@ -202,16 +231,11 @@ namespace dda
         return (m_Tilemap.Size() > 0 && m_TargetTiles.Size() > 0);
     }
 
-    inline bool BoundCheck(uint16_t tile_x, uint16_t tile_y)
-    {
-        return tile_x < m_Settings.m_Width && tile_y < m_Settings.m_Height;
-    }
-
     void SetAt(uint16_t tile_x, uint16_t tile_y, uint16_t value)
     {
         if (BoundCheck(tile_x, tile_y))
         {
-            uint32_t index = tile_y * m_Settings.m_Width + tile_x;
+            uint32_t index = GetTileIndex(tile_x, tile_y);
             m_Tilemap[index] = value;
         }
         else
@@ -224,7 +248,7 @@ namespace dda
     {
         if (BoundCheck(tile_x, tile_y))
         {
-            uint32_t index = tile_y * m_Settings.m_Width + tile_x;
+            uint32_t index = GetTileIndex(tile_x, tile_y);
             return m_Tilemap[index];
         }
         else
