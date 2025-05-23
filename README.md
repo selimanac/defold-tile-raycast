@@ -21,11 +21,11 @@ You can find vision cone and line of sight examples in this project.
 For v1: https://github.com/selimanac/defold-tile-raycast-platformer  
 
 # Release Notes
-## v2
+### v2
 - **BREAKING:** Module name has been changed to `tile_raycast`
 - Complete code refactoring
-- Minimal performance improvements
-- New visual cone and line of sight examples
+- Performance improvements
+- New vision cone and line of sight examples
 
 # Use Cases(AI Generated)
 
