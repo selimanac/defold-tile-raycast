@@ -24,11 +24,14 @@ const.COLLISION_BITS = {
 }
 
 const.TRIGGER = {
-	UP    = hash("up"),
-	DOWN  = hash("down"),
-	LEFT  = hash("left"),
-	RIGHT = hash("right"),
-	TOUCH = hash("touch")
+	UP            = hash("up"),
+	DOWN          = hash("down"),
+	LEFT          = hash("left"),
+	RIGHT         = hash("right"),
+	TOUCH         = hash("touch"),
+	VISION_CONE   = hash("vision_cone"),
+	LINE_OF_SIGHT = hash("line_of_sight"),
+	DEBUG         = hash("debug"),
 }
 
 const.HERO = {

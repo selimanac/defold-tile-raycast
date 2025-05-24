@@ -1,0 +1,26 @@
+name: "loading"
+scale_along_z: 0
+embedded_instances {
+  id: "scenes"
+  data: "embedded_components {\n"
+  "  id: \"vision_cone\"\n"
+  "  type: \"collectionproxy\"\n"
+  "  data: \"collection: \\\"/examples/vision-cone/vision-cone.collection\\\"\\n"
+  "\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"line_of_sight\"\n"
+  "  type: \"collectionproxy\"\n"
+  "  data: \"collection: \\\"/examples/line-of-sight/line-of-sight.collection\\\"\\n"
+  "\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "script"
+  data: "components {\n"
+  "  id: \"loading\"\n"
+  "  component: \"/examples/loading.script\"\n"
+  "}\n"
+  ""
+}

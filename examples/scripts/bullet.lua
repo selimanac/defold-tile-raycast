@@ -195,13 +195,13 @@ function bullets.update(dt)
 	end
 end
 
---[[function bullets.clear()
+function bullets.reset()
 	for _, bullet in ipairs(bullet_list) do
 		collision.remove(bullet.aabb_id)
 		go.delete(bullet.id)
 		delete_trail_segments(bullet)
 	end
 	bullet_list = {}
-end]]
+end
 
 return bullets

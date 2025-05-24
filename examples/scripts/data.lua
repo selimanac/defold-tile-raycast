@@ -18,6 +18,15 @@ data.enemy_aabb_ids = {}
 
 data.mouse_position = vmath.vector3(0.9)
 
-data.bullets = {}
+data.enemies = {}
+data.enemy_aabb_ids = {}
+
+
+function data.reset()
+	data.enemies = {}
+	data.enemy_aabb_ids = {}
+	data.enemies = {}
+	data.enemy_aabb_ids = {}
+end
 
 return data

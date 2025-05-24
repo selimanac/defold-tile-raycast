@@ -34,6 +34,18 @@ key_trigger {
   input: KEY_DOWN
   action: "down"
 }
+key_trigger {
+  input: KEY_1
+  action: "vision_cone"
+}
+key_trigger {
+  input: KEY_2
+  action: "line_of_sight"
+}
+key_trigger {
+  input: KEY_3
+  action: "debug"
+}
 mouse_trigger {
   input: MOUSE_BUTTON_LEFT
   action: "touch"

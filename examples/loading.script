@@ -1,0 +1,46 @@
+local const = require("examples.scripts.const")
+local data = require("examples.scripts.data")
+local debug = require("examples.scripts.debug")
+
+local function load(self, proxy)
+	if self.current_proxy then
+		msg.post(self.current_proxy, "release_input_focus")
+		msg.post(self.current_proxy, "unload")
+		self.current_proxy = nil
+	end
+	msg.post(proxy, "async_load")
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.current_proxy = nil
+	msg.post("#", "vision_cone")
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("vision_cone") then
+		load(self, "/scenes#vision_cone")
+	elseif message_id == hash("line_of_sight") then
+		load(self, "/scenes#line_of_sight")
+	elseif message_id == hash("proxy_loaded") then
+		self.current_proxy = sender
+		msg.post(sender, "enable")
+		msg.post(sender, "acquire_input_focus")
+	elseif message_id == hash("proxy_unloaded") then
+		--print("Unloaded", sender)
+	end
+end
+
+function update()
+	debug.draw_text()
+end
+
+function on_input(self, action_id, action)
+	if action_id == const.TRIGGER.VISION_CONE and action.pressed then
+		msg.post("#", "vision_cone")
+	elseif action_id == const.TRIGGER.LINE_OF_SIGHT and action.pressed then
+		msg.post("#", "line_of_sight")
+	elseif action_id == const.TRIGGER.DEBUG and action.pressed then
+		data.debug = not data.debug
+	end
+end

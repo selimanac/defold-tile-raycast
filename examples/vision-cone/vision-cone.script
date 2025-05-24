@@ -5,6 +5,7 @@ local map         = require("examples.scripts.map")
 local bullet      = require("examples.scripts.bullet")
 local game_camera = require("examples.scripts.game_camera")
 local collision   = require("examples.scripts.collision")
+local data        = require("examples.scripts.data")
 
 function init()
 	msg.post(".", "acquire_input_focus")
@@ -24,6 +25,8 @@ function on_input(_, action_id, action)
 end
 
 function final()
+	bullet.reset()
 	tile_raycast.reset()
+	data.reset()
 	collision.reset()
 end

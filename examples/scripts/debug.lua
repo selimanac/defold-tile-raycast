@@ -18,6 +18,10 @@ function debug.draw_line(start_position, end_position, color)
 	msg.post("@render:", "draw_line", { start_point = start_position, end_point = end_position, color = color })
 end
 
+function debug.draw_text()
+	msg.post("@render:", "draw_debug_text", { text = "1 - Vision Cone\n2 - Line of Sight \n3 - Debug Draw", position = vmath.vector3(60, 120, 0), color = debug.COLOR.WHITE })
+end
+
 function debug.draw_cone(enemy)
 	local cone_segments = 10
 	local angle_step = enemy.vision.fov / cone_segments

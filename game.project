@@ -1,5 +1,5 @@
 [bootstrap]
-main_collection = /examples/vision-cone/vision-cone.collectionc
+main_collection = /examples/loading.collectionc
 render = /builtins/render/default.renderc
 
 [script]
