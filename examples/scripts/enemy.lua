@@ -167,32 +167,43 @@ function enemies.vision_update(dt)
 end
 
 function enemies.update(dt)
-	for _, enemy_item in ipairs(data.enemies) do
+	for _, enemy in ipairs(data.enemies) do
 		-- Update fire timer
-		if enemy_item.fire_timer > 0 then
-			enemy_item.fire_timer = enemy_item.fire_timer - dt
+		if enemy.fire_timer > 0 then
+			enemy.fire_timer = enemy.fire_timer - dt
 		end
 
 		-- Perform raycast to check if player is visible
 		local hit, _, _, _, _, intersection_x, intersection_y, _ =
-			tile_raycast.cast(enemy_item.position.x, enemy_item.position.y, data.player.position.x, data.player.position.y)
+			tile_raycast.cast(enemy.position.x, enemy.position.y, data.player.position.x, data.player.position.y)
 
 		if hit then
 			-- Player not visible
+			enemy.vision.state = const.VISION.STATE.IDLE
+			if enemy.vision.state ~= enemy.vision.previous_state then
+				set_vision_status_indicator(enemy)
+			end
+
 			ray_intersection.x = intersection_x
 			ray_intersection.y = intersection_y
 
 			debug.draw_line(ray_intersection, data.player.position, debug.COLOR.RED)
-			debug.draw_line(enemy_item.position, ray_intersection, debug.COLOR.GREEN)
+			debug.draw_line(enemy.position, ray_intersection, debug.COLOR.GREEN)
 		else
 			-- Player visible
-			if enemy_item.fire_timer <= 0 then
-				-- Fire bullet and reset timer
-				bullet.add(enemy_item.position, data.player.position, const.COLLISION_BITS.PLAYER, const.ENEMY.BULLETS.SINGLE)
-				enemy_item.fire_timer = const.ENEMY.FIRE_COOLDOWN
+			enemy.vision.state = const.VISION.STATE.ALERT
+			if enemy.vision.state ~= enemy.vision.previous_state then
+				set_vision_status_indicator(enemy)
 			end
 
-			debug.draw_line(enemy_item.position, data.player.position, debug.COLOR.GREEN)
+
+			if enemy.fire_timer <= 0 then
+				-- Fire bullet and reset timer
+				bullet.add(enemy.position, data.player.position, const.COLLISION_BITS.PLAYER, const.ENEMY.BULLETS.SINGLE)
+				enemy.fire_timer = const.ENEMY.FIRE_COOLDOWN
+			end
+
+			debug.draw_line(enemy.position, data.player.position, debug.COLOR.GREEN)
 		end
 	end
 end
