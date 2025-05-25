@@ -5,7 +5,9 @@
 #include <dda.h>
 #include <cstdint>
 
-static int RaycastReset(lua_State* L)
+const float EPSILON = 1e-6f;
+
+static int  RaycastReset(lua_State* L)
 {
     dda::Reset();
     return 0;
@@ -75,6 +77,13 @@ static int RaycastResult(lua_State* L)
     dda::Vec2 ray_end;
     ray_end.x = luaL_checknumber(L, 3);
     ray_end.y = luaL_checknumber(L, 4);
+
+    // early return if they are the same
+    if (DistanceSquared(&ray_start, &ray_end) < (EPSILON * EPSILON))
+    {
+        lua_pushboolean(L, false);
+        return 1;
+    }
 
     dda::RayResult m_RayResult;
     dda::RayCast(&ray_start, &ray_end, &m_RayResult);

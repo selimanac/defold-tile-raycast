@@ -61,11 +61,6 @@ namespace dda
         // return sqrt(pow((v2->x - v1->x), 2) + pow((v2->y - v1->y), 2)); //<- no need for pow
     }
 
-    inline float DistanceSquared(const Vec2* v1, const Vec2* v2)
-    {
-        return (v2->x - v1->x) * (v2->x - v1->x) + (v2->y - v1->y) * (v2->y - v1->y);
-    }
-
     inline void Normalize(const Vec2* in, Vec2* out)
     {
         float length = sqrtf(in->x * in->x + in->y * in->y);
