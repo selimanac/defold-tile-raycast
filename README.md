@@ -16,7 +16,8 @@ https://github.com/selimanac/defold-tile-raycast/archive/refs/heads/master.zip
 
 # Examples
 
-You can find vision cone and line of sight examples in this project. Test it here: https://selimanac.github.io/defold-tile-raycast/ 
+You can find vision cone and line of sight examples in this project.   
+Test it here: https://selimanac.github.io/defold-tile-raycast/ 
 
 For v1: https://github.com/selimanac/defold-tile-raycast-platformer  
 
