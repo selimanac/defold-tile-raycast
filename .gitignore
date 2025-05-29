@@ -13,7 +13,8 @@ builtins
 .clang-format
 compile_commands.json
 /.cache
-*.der
+manifest.private.der
+manifest.public.der
 RELEASE-NOTES.md
 /.editor_settings
 build_config.json
